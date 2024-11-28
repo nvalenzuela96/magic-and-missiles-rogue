@@ -1,0 +1,47 @@
+[gd_scene load_steps=10 format=3 uid="uid://eao44nyiswa2"]
+
+[ext_resource type="Script" path="res://Assets/Environments/World.cs" id="1_vfbev"]
+[ext_resource type="PackedScene" uid="uid://c5ql41yrtnssf" path="res://Assets/Entities/Player/Player3D.tscn" id="2_wdvjv"]
+[ext_resource type="PackedScene" uid="uid://dr4vmdotiyjfa" path="res://Assets/Entities/Enemies/Mob.tscn" id="3_yta3x"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_owcxr"]
+size = Vector2(100, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_otfvx"]
+albedo_color = Color(0.548963, 0.548963, 0.548963, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e2xiu"]
+
+[sub_resource type="Sky" id="Sky_k08sy"]
+sky_material = SubResource("ProceduralSkyMaterial_e2xiu")
+
+[sub_resource type="Environment" id="Environment_mnsde"]
+background_mode = 2
+sky = SubResource("Sky_k08sy")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kypat"]
+height = 12.891
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_vfbev")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+use_collision = true
+mesh = SubResource("PlaneMesh_owcxr")
+material = SubResource("StandardMaterial3D_otfvx")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 150.517, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_mnsde")
+
+[node name="Player3D" parent="." instance=ExtResource("2_wdvjv")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.38649, -23.5984)
+mesh = SubResource("CylinderMesh_kypat")
+
+[node name="Mob" parent="." instance=ExtResource("3_yta3x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 1.0272, -18)

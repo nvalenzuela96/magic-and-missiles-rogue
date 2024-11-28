@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnhkc2d4pua13"]
+
+[ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0dyg1"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j5rrb")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 15.0
+offset_right = 310.0
+offset_bottom = 81.0
+theme_override_constants/v_separation = 10
+
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "HP"
+
+[node name="ProgressBar" type="ProgressBar" parent="GridContainer/Label"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 1.0
+offset_right = 292.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_styles/background = SubResource("StyleBoxTexture_0dyg1")
+value = 100.0
+
+[node name="Label2" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "MP"
+
+[node name="ProgressBar" type="ProgressBar" parent="GridContainer/Label2"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 1.0
+offset_right = 292.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+value = 100.0

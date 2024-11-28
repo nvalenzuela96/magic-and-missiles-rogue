@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://c5ql41yrtnssf"]
+
+[ext_resource type="Script" path="res://Assets/Entities/Player/Player3D.cs" id="1_3g1qd"]
+[ext_resource type="PackedScene" uid="uid://dnhkc2d4pua13" path="res://Assets/UI/HUD.tscn" id="2_17v8i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmd7a"]
+albedo_color = Color(1, 0.454902, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_basn5"]
+material = SubResource("StandardMaterial3D_cmd7a")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cd44v"]
+
+[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_m3gxn"]
+length = 5.0
+slide_on_slope = true
+
+[node name="Player3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01129, 0)
+collision_layer = 7
+collision_mask = 3
+script = ExtResource("1_3g1qd")
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_basn5")
+
+[node name="PlayerCollider" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_cd44v")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+
+[node name="CameraBoom" type="SpringArm3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+shape = SubResource("SeparationRayShape3D_m3gxn")
+spring_length = 4.0
+
+[node name="Camera" type="Camera3D" parent="CameraPivot/CameraBoom"]
+transform = Transform3D(1, 0, 0, 0, 0.976672, 0.214735, 0, -0.214735, 0.976672, 0, 3, 8)
+current = true
+
+[node name="CharacterPOV" type="Camera3D" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("2_17v8i")]
