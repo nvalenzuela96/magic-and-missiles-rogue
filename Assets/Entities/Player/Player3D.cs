@@ -17,7 +17,19 @@ public partial class Player3D : CharacterBody3D
 	[Export]
 	float cameraSpeed = 3f;
 
-	private Camera3D camera;
+	[Export]
+	float healthPoints = 100f;
+	[Export]
+	float manaPoints = 100f;
+
+	[Export]
+	float meleeRange = 2f;
+    [Export]
+    float meleeDamage = 5f;
+    [Export]
+    float attackSpeed = 3f;
+
+    private Camera3D camera;
 	private SpringArm3D cameraBoom;
 	private Node3D cameraPivot;
 
@@ -30,10 +42,16 @@ public partial class Player3D : CharacterBody3D
 
 	private World world;
 	private HUD hud;
+    Mob target;
 
-	bool cameraPanned = false;
+	Timer timer;
 
-	public override void _Ready()
+    bool cameraPanned = false;
+	public bool inCombat = false;
+    bool withinRange = false;
+    bool attackChambered = false;
+
+    public override void _Ready()
 	{
 		cameraPivot = GetNode<Node3D>("CameraPivot");
 		cameraBoom = GetNode<SpringArm3D>("CameraPivot/CameraBoom");
@@ -46,6 +64,8 @@ public partial class Player3D : CharacterBody3D
 		
 		playerCollider = GetNode<CollisionShape3D>("PlayerCollider");
 		playerMesh = GetNode<MeshInstance3D>("PlayerMesh");
+
+		timer = GetNode<Timer>("AttackTimer");
 
 		cameraBoom.SpringLength = zoomStart;
 	}
@@ -103,6 +123,11 @@ public partial class Player3D : CharacterBody3D
 	{
 		base._PhysicsProcess(delta);
 
+        if (attackChambered && withinRange)
+        {
+            GD.Print("Player swing at target.");
+            attackChambered = false;
+        }
         HandleMovement(delta);
 	}
 
@@ -147,4 +172,25 @@ public partial class Player3D : CharacterBody3D
 		Velocity = velocity;
 		MoveAndSlide();
 	}
+
+	private void CheckRangeToTarget()
+	{
+        if (Position.DistanceTo(target.Position) <= meleeRange)
+        {
+            withinRange = true;
+            if (timer.IsStopped())
+            {
+                timer.Start();
+            }
+        }
+        else
+        {
+            withinRange = false;
+        }
+    }
+
+	private void _OnAttackTimerTimeout()
+	{
+        attackChambered = true;
+    }
 }
