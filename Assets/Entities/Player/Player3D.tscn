@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5ql41yrtnssf"]
+[gd_scene load_steps=11 format=3 uid="uid://c5ql41yrtnssf"]
 
 [ext_resource type="Script" path="res://Assets/Entities/Player/Player3D.cs" id="1_3g1qd"]
 [ext_resource type="PackedScene" uid="uid://dnhkc2d4pua13" path="res://Assets/UI/HUD.tscn" id="2_17v8i"]
@@ -8,6 +8,21 @@ albedo_color = Color(1, 0.454902, 0, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_basn5"]
 material = SubResource("StandardMaterial3D_cmd7a")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2qce"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_b5ye8"]
+material = SubResource("StandardMaterial3D_v2qce")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tub2j"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_phxse"]
+material = SubResource("StandardMaterial3D_tub2j")
+radius = 0.05
+height = 0.1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cd44v"]
 
@@ -24,6 +39,22 @@ script = ExtResource("1_3g1qd")
 [node name="PlayerMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_basn5")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.5, -0.4)
+mesh = SubResource("SphereMesh_b5ye8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerMesh/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015, 0, -0.055)
+mesh = SubResource("SphereMesh_phxse")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="PlayerMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.5, -0.4)
+mesh = SubResource("SphereMesh_b5ye8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerMesh/MeshInstance3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015, 0, -0.055)
+mesh = SubResource("SphereMesh_phxse")
+
 [node name="PlayerCollider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_cd44v")
 
@@ -37,6 +68,7 @@ spring_length = 4.0
 [node name="Camera" type="Camera3D" parent="CameraPivot/CameraBoom"]
 transform = Transform3D(1, 0, 0, 0, 0.976672, 0.214735, 0, -0.214735, 0.976672, 0, 3, 8)
 current = true
+fov = 80.0
 
 [node name="CharacterPOV" type="Camera3D" parent="."]
 
@@ -44,4 +76,8 @@ current = true
 
 [node name="AttackTimer" type="Timer" parent="."]
 
+[node name="CastTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="AttackTimer" to="." method="_OnAttackTimerTimeout"]
+[connection signal="timeout" from="CastTimer" to="." method="_OnCastTimerTimeout"]

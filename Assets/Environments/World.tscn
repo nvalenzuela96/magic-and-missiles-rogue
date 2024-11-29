@@ -45,9 +45,19 @@ shadow_enabled = true
 environment = SubResource("Environment_mnsde")
 
 [node name="Player3D" parent="." instance=ExtResource("2_wdvjv")]
+meleeDamage = 5.0
 
 [node name="Mob" parent="." instance=ExtResource("3_yta3x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 1.0272, -18)
+meleeDamage = 3.0
+
+[node name="Mob2" parent="." instance=ExtResource("3_yta3x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.8582, 1.0272, -5.90695)
+meleeDamage = 3.0
+
+[node name="Mob3" parent="." instance=ExtResource("3_yta3x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.8582, 1.0272, 8.43576)
+meleeDamage = 3.0
 
 [node name="CSGMesh3D2" type="CSGMesh3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -50)

@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Godot.HttpRequest;
 
 public partial class Player3D : CharacterBody3D
 {
@@ -19,6 +20,8 @@ public partial class Player3D : CharacterBody3D
 	float zoomStart = 8f;
 	[Export]
 	float cameraSpeed = 3f;
+	[Export]
+	string characterName = "Tigginz";
 
 	[Export]
 	float maxHealthPoints = 100f;
@@ -51,16 +54,23 @@ public partial class Player3D : CharacterBody3D
 	private ProgressBar healthBar;
 	private ProgressBar manaBar;
 
+	private PanelContainer targetUnitFrame;
+	private ProgressBar targetHealthBar;
+	private ProgressBar targetManaBar;
+
     public Mob target;
 	List<Mob> attackerList;
 
+    Timer attackTimer;
+    Timer castTimer;
 
-    Timer timer;
+	public Spell castingSpell;
 
     bool cameraPanned = false;
 	public bool inCombat = false;
     bool withinRange = false;
     bool attackChambered = false;
+	bool casting = false;
 
     public override void _Ready()
 	{
@@ -71,14 +81,22 @@ public partial class Player3D : CharacterBody3D
 		pov = GetNode<Camera3D>("CharacterPOV");
 
 		world = GetParent<World>();
+
 		hud = GetNode<HUD>("HUD");
-		healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Health/HealthBar");
-		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Mana/ManaBar");
-		
-		playerCollider = GetNode<CollisionShape3D>("PlayerCollider");
+		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterName;
+
+        healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
+		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/ManaBar");
+
+        targetUnitFrame = hud.GetNode<PanelContainer>("TargetUnitFrame");
+        targetHealthBar = hud.GetNode<ProgressBar>("TargetUnitFrame/Grid/HealthBar");
+        targetManaBar = hud.GetNode<ProgressBar>("TargetUnitFrame/Grid/ManaBar");
+
+        playerCollider = GetNode<CollisionShape3D>("PlayerCollider");
 		playerMesh = GetNode<MeshInstance3D>("PlayerMesh");
 
-		timer = GetNode<Timer>("AttackTimer");
+		attackTimer = GetNode<Timer>("AttackTimer");
+		castTimer = GetNode<Timer>("CastTimer");
 
 		cameraBoom.SpringLength = zoomStart;
 
@@ -137,27 +155,26 @@ public partial class Player3D : CharacterBody3D
 				GD.Print(cameraBoom.SpringLength);
 			}
 		}
-		if (@event is InputEventMouseButton mouseButton)
+        if (Input.IsActionJustPressed("action_bar_1"))
+        {
+			CastSpell(new Spell());
+        }
+        if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
 		{
-			if (mouseButton.Pressed)
+            var from = camera.ProjectRayOrigin(mouseButton.Position);
+            var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
+			var space = GetWorld3D().DirectSpaceState;
+			var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
+			rayCast.From = from;
+			rayCast.To = to;
+            var result = space.IntersectRay(rayCast);
+			if (result.Count > 0)
 			{
-                var from = camera.ProjectRayOrigin(mouseButton.Position);
-                var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
-				var space = GetWorld3D().DirectSpaceState;
-				var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
-				rayCast.From = from;
-				rayCast.To = to;
-                var result = space.IntersectRay(rayCast);
-				if (result.Count > 0)
-				{
-                    var collision = result.GetValueOrDefault("collider");
-                    if (collision.Obj.GetType() == typeof(Mob))
-                    {
-                        target = (Mob)collision.Obj;
-						target.GetTargetted(this);
-                        GD.Print(target.name);
-                    }
-                }
+				HandleTargetting(result);
+            }
+			else
+			{
+				target = null;
 			}
 		}
 	}
@@ -169,19 +186,65 @@ public partial class Player3D : CharacterBody3D
         if (attackChambered && withinRange && target != null)
         {
             GD.Print("Player swing at target.");
-			target.TakeDamage(meleeDamage);
+			target.TakeDamage(meleeDamage, this);
             attackChambered = false;
         }
         HandleMovement(delta);
 		if (target != null)
 		{
 			CheckRangeToTarget();
+			UpdateTargetUnitFrame();
         }
 	}
+
+	private void UpdateTargetUnitFrame()
+	{
+        targetHealthBar.Value = target.currentHp;
+        targetManaBar.Value = target.currentMana;
+        hud.GetNode<Label>("TargetUnitFrame/Grid/Name").Text = target.name;
+    }
+
+	private void CastSpell(Spell spell)
+	{
+		if (target != null && !casting)
+		{
+			casting = true;
+			castingSpell = spell;
+			castTimer.WaitTime = spell.CastTime;
+			castTimer.Start();
+			GD.Print($"Casting {spell.SpellName}...");
+		}
+	}
+
+	private void HandleTargetting(Godot.Collections.Dictionary result)
+	{
+        var collision = result.GetValueOrDefault("collider");
+        if (collision.Obj.GetType() == typeof(Mob))
+        {
+            target = (Mob)collision.Obj;
+            targetHealthBar.MaxValue = target.maxHealthPoints;
+            targetHealthBar.Value = target.currentHp;
+            targetManaBar.MaxValue = target.maxManaPoints;
+            targetManaBar.Value = target.currentMana;
+            target.GetTargetted(this);
+            targetUnitFrame.Show();
+        }
+        else
+        {
+            target = null;
+			targetUnitFrame.Hide();
+        }
+    }
 
 	private async void HandleMovement(double delta)
     {
 		Vector3 velocity = Velocity;
+
+		var conditionalSpeed = Speed;
+		if (casting)
+		{
+			conditionalSpeed = conditionalSpeed /= 3;
+		}
 
 		// Add the gravity.
 		if (!IsOnFloor())
@@ -208,13 +271,13 @@ public partial class Player3D : CharacterBody3D
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
+			velocity.X = direction.X * conditionalSpeed;
+			velocity.Z = direction.Z * conditionalSpeed;
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, conditionalSpeed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, conditionalSpeed);
 		}
 
 		Velocity = velocity;
@@ -226,9 +289,9 @@ public partial class Player3D : CharacterBody3D
         if (Position.DistanceTo(target.Position) <= meleeRange)
         {
             withinRange = true;
-            if (timer.IsStopped())
+            if (attackTimer.IsStopped())
             {
-                timer.Start();
+                attackTimer.Start();
             }
         }
         else
@@ -240,6 +303,14 @@ public partial class Player3D : CharacterBody3D
 	private void _OnAttackTimerTimeout()
 	{
         attackChambered = true;
+    }
+
+	private void _OnCastTimerTimeout()
+	{
+        casting = false;
+        target.TakeDamage(castingSpell.Damage, this);
+		GD.Print($"{target.name} hit by {characterName} with {castingSpell.SpellName} for {castingSpell.Damage}!");
+		castingSpell = null;
     }
 
     public void TakeDamage(float damageAmount)

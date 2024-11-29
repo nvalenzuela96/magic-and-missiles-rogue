@@ -1,6 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=4 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4elc2"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.201527, 0.201527, 0.201526, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0dyg1"]
 
@@ -13,37 +20,61 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_j5rrb")
 
-[node name="PlayerUnitFrame" type="GridContainer" parent="."]
+[node name="PlayerUnitFrame" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(100, 50)
 layout_mode = 0
-offset_left = 14.0
-offset_top = 15.0
-offset_right = 310.0
-offset_bottom = 81.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 210.0
+offset_bottom = 105.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_4elc2")
+
+[node name="Grid" type="GridContainer" parent="PlayerUnitFrame"]
+layout_mode = 2
 theme_override_constants/v_separation = 10
 
-[node name="Health" type="Label" parent="PlayerUnitFrame"]
+[node name="Name" type="Label" parent="PlayerUnitFrame/Grid"]
 layout_mode = 2
-text = "HP"
+horizontal_alignment = 1
 
-[node name="HealthBar" type="ProgressBar" parent="PlayerUnitFrame/Health"]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 1.0
-offset_right = 292.0
-offset_bottom = 28.0
+[node name="HealthBar" type="ProgressBar" parent="PlayerUnitFrame/Grid"]
+custom_minimum_size = Vector2(200, 25)
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_styles/background = SubResource("StyleBoxTexture_0dyg1")
 value = 100.0
 
-[node name="Mana" type="Label" parent="PlayerUnitFrame"]
+[node name="ManaBar" type="ProgressBar" parent="PlayerUnitFrame/Grid"]
 layout_mode = 2
-text = "MP"
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+value = 100.0
 
-[node name="ManaBar" type="ProgressBar" parent="PlayerUnitFrame/Mana"]
-layout_mode = 0
-offset_left = 28.0
-offset_top = 1.0
-offset_right = 292.0
-offset_bottom = 28.0
+[node name="TargetUnitFrame" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+offset_left = 223.0
+offset_top = 10.0
+offset_right = 427.0
+offset_bottom = 109.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_4elc2")
+
+[node name="Grid" type="GridContainer" parent="TargetUnitFrame"]
+layout_mode = 2
+theme_override_constants/v_separation = 10
+
+[node name="Name" type="Label" parent="TargetUnitFrame/Grid"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HealthBar" type="ProgressBar" parent="TargetUnitFrame/Grid"]
+custom_minimum_size = Vector2(200, 25)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_styles/background = SubResource("StyleBoxTexture_0dyg1")
+value = 100.0
+
+[node name="ManaBar" type="ProgressBar" parent="TargetUnitFrame/Grid"]
+layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 1, 1)
 value = 100.0

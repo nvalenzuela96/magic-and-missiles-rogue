@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dr4vmdotiyjfa"]
+[gd_scene load_steps=12 format=3 uid="uid://dr4vmdotiyjfa"]
 
 [ext_resource type="Script" path="res://Assets/Entities/Enemies/Mob.cs" id="1_klsuj"]
 
@@ -15,6 +15,21 @@ albedo_color = Color(0.351563, 0.351563, 0.351563, 1)
 material = SubResource("StandardMaterial3D_327j2")
 top_radius = 0.0
 height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1roik"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_wj6fy"]
+material = SubResource("StandardMaterial3D_1roik")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xsq8"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ex8ad"]
+material = SubResource("StandardMaterial3D_0xsq8")
+radius = 0.05
+height = 0.1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oa0wh"]
 
@@ -35,6 +50,22 @@ mesh = SubResource("CylinderMesh_v75w6")
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D"]
 transform = Transform3D(0.772734, 0.634731, 0, -0.634731, 0.772734, 0, 0, 0, 1, 0.295, 0.828, 0)
 mesh = SubResource("CylinderMesh_v75w6")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.5, -0.4)
+mesh = SubResource("SphereMesh_wj6fy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D/MeshInstance3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015, 0, -0.055)
+mesh = SubResource("SphereMesh_ex8ad")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.5, -0.4)
+mesh = SubResource("SphereMesh_wj6fy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D/MeshInstance3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015, 0, -0.055)
+mesh = SubResource("SphereMesh_ex8ad")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_oa0wh")

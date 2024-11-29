@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://cs264vqssbqv1"]
+
+[ext_resource type="Script" path="res://Assets/Spells/Spell.cs" id="1_0phal"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kdv1y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ukfgr"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.572549)
+
+[sub_resource type="SphereMesh" id="SphereMesh_oo62v"]
+material = SubResource("StandardMaterial3D_ukfgr")
+radius = 0.25
+height = 0.5
+
+[node name="ProjectileSpell" type="RigidBody3D"]
+script = ExtResource("1_0phal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_kdv1y")
+
+[node name="SpellMesh" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("SphereMesh_oo62v")
+skeleton = NodePath("../..")

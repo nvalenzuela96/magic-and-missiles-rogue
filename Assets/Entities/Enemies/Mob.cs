@@ -10,13 +10,14 @@ public partial class Mob : CharacterBody3D
     [Export]
     float meleeDamage = 25f;
     [Export]
-    float maxHealthPoints = 100f;
+    public float maxHealthPoints = 100f;
     [Export]
-    float manaPoints = 100f;
+    public float maxManaPoints = 100f;
     [Export]
     float attackSpeed = 3f;
 
-    float currentHp;
+    public float currentHp;
+    public float currentMana;
 
     List<Player3D> attackerList;
 
@@ -28,7 +29,7 @@ public partial class Mob : CharacterBody3D
     bool withinRange = false;
     bool attackChambered = false;
 
-    public string name = "Lola's enemy.";
+    public string name = "Lola's Enemy";
 
     public override void _Ready()
     {
@@ -37,6 +38,7 @@ public partial class Mob : CharacterBody3D
         timer = GetNode<Timer>("CombatTimer");
         timer.WaitTime = attackSpeed;
         currentHp = maxHealthPoints;
+        currentMana = maxManaPoints;
         attackerList = new List<Player3D>();
     }
 
@@ -106,8 +108,13 @@ public partial class Mob : CharacterBody3D
         }
     }
 
-    public void TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount, Player3D player)
     {
+        if (!attackerList.Contains(player))
+        {
+            attackerList.Add(player);
+            GD.Print($"{player} added to attacker list.");
+        }
         currentHp -= damageAmount;
         GD.Print($"Health is = {currentHp}");
         if (currentHp <= 0)
@@ -119,6 +126,11 @@ public partial class Mob : CharacterBody3D
                 GD.Print($"Attacker target{attacker.target}");
             }
             QueueFree();
+        }
+        if (!aggroed)
+        {
+            aggroed = true;
+            target = player;
         }
     }
 
