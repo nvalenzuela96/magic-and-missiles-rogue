@@ -28,6 +28,9 @@ public partial class Player3D : CharacterBody3D
 	[Export]
 	float maxManaPoints = 100f;
 
+	[Export]
+	PackedScene spellProjectile;
+
 	float currentHp;
 	float currentMana;
 
@@ -308,6 +311,10 @@ public partial class Player3D : CharacterBody3D
 	private void _OnCastTimerTimeout()
 	{
         casting = false;
+		Spell spellDraw = (Spell)spellProjectile.Instantiate();
+		spellDraw.target = target;
+		world.AddChild(spellDraw);
+		spellDraw.Transform = Transform;
         target.TakeDamage(castingSpell.Damage, this);
 		GD.Print($"{target.name} hit by {characterName} with {castingSpell.SpellName} for {castingSpell.Damage}!");
 		castingSpell = null;
