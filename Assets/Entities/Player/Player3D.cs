@@ -1,5 +1,7 @@
 using Godot;
+using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 
 public partial class Player3D : CharacterBody3D
 {
@@ -42,6 +44,7 @@ public partial class Player3D : CharacterBody3D
 
 	private World world;
 	private HUD hud;
+
     Mob target;
 
 	Timer timer;
@@ -78,48 +81,70 @@ public partial class Player3D : CharacterBody3D
 		{
 			if (Input.IsActionPressed("mouse_steer"))
 			{
-                Vector3 rotDeg = RotationDegrees;
-                rotDeg.Y -= motionEvent.Relative.X * mouseSensitivity;
-                RotationDegrees = rotDeg;
+				Vector3 rotDeg = RotationDegrees;
+				rotDeg.Y -= motionEvent.Relative.X * mouseSensitivity;
+				RotationDegrees = rotDeg;
 
-                rotDeg = cameraPivot.RotationDegrees;
-                rotDeg.X -= motionEvent.Relative.Y * mouseSensitivity;
-                rotDeg.X = Mathf.Clamp(rotDeg.X, minPitch, maxPitch);
-                cameraPivot.RotationDegrees = rotDeg;
+				rotDeg = cameraPivot.RotationDegrees;
+				rotDeg.X -= motionEvent.Relative.Y * mouseSensitivity;
+				rotDeg.X = Mathf.Clamp(rotDeg.X, minPitch, maxPitch);
+				cameraPivot.RotationDegrees = rotDeg;
 				cameraRotation = rotDeg;
-            }
+			}
 			if (Input.IsActionPressed("camera_pan"))
 			{
-                Vector3 rotDeg = cameraPivot.RotationDegrees;
-                rotDeg.Y -= motionEvent.Relative.X * mouseSensitivity;
-                rotDeg.X -= motionEvent.Relative.Y * mouseSensitivity;
-                rotDeg.X = Mathf.Clamp(rotDeg.X, minPitch, maxPitch);
-                cameraPivot.RotationDegrees = rotDeg;
-            }
+				Vector3 rotDeg = cameraPivot.RotationDegrees;
+				rotDeg.Y -= motionEvent.Relative.X * mouseSensitivity;
+				rotDeg.X -= motionEvent.Relative.Y * mouseSensitivity;
+				rotDeg.X = Mathf.Clamp(rotDeg.X, minPitch, maxPitch);
+				cameraPivot.RotationDegrees = rotDeg;
+			}
 		}
-        if (Input.IsActionJustPressed("camera_zoom_in"))
-        {
-            GD.Print("Zoom in");
-            if (cameraBoom.SpringLength > 0.0)
-            {
-                GD.Print(cameraBoom.SpringLength);
-                cameraBoom.SpringLength -= 1;
-                GD.Print(cameraBoom.SpringLength);
-            }
-        }
-        if (Input.IsActionJustPressed("camera_zoom_out"))
-        {
-            GD.Print("Zoom out");
-            if (cameraBoom.SpringLength < 20.0)
-            {
-                GD.Print(cameraBoom.SpringLength);
-                cameraBoom.SpringLength += 1;
-                GD.Print(cameraBoom.SpringLength);
-            }
-        }
-    }
+		if (Input.IsActionJustPressed("camera_zoom_in"))
+		{
+			GD.Print("Zoom in");
+			if (cameraBoom.SpringLength > 0.0)
+			{
+				GD.Print(cameraBoom.SpringLength);
+				cameraBoom.SpringLength -= 1;
+				GD.Print(cameraBoom.SpringLength);
+			}
+		}
+		if (Input.IsActionJustPressed("camera_zoom_out"))
+		{
+			GD.Print("Zoom out");
+			if (cameraBoom.SpringLength < 20.0)
+			{
+				GD.Print(cameraBoom.SpringLength);
+				cameraBoom.SpringLength += 1;
+				GD.Print(cameraBoom.SpringLength);
+			}
+		}
+		if (@event is InputEventMouseButton mouseButton)
+		{
+			if (mouseButton.Pressed)
+			{
+                var from = camera.ProjectRayOrigin(mouseButton.Position);
+                var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
+				var space = GetWorld3D().DirectSpaceState;
+				var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
+				rayCast.From = from;
+				rayCast.To = to;
+                var result = space.IntersectRay(rayCast);
+				if (result.Count > 0)
+				{
+                    var collision = result.GetValueOrDefault("collider");
+                    if (collision.Obj.GetType() == typeof(Mob))
+                    {
+                        target = (Mob)collision.Obj;
+                        GD.Print(target.name);
+                    }
+                }
+			}
+		}
+	}
 
-	public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
 
@@ -129,6 +154,10 @@ public partial class Player3D : CharacterBody3D
             attackChambered = false;
         }
         HandleMovement(delta);
+		if (target != null)
+		{
+			CheckRangeToTarget();
+        }
 	}
 
 	private async void HandleMovement(double delta)
@@ -186,6 +215,7 @@ public partial class Player3D : CharacterBody3D
         else
         {
             withinRange = false;
+            GD.Print("Target out of range");
         }
     }
 

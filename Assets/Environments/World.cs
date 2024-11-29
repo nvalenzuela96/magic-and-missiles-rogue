@@ -12,4 +12,9 @@ public partial class World : Node3D
 	public override void _Process(double delta)
 	{
 	}
+
+	public void HandleTargettingViaClick()
+	{
+
+	}
 }

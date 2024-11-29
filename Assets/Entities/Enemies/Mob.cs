@@ -23,24 +23,14 @@ public partial class Mob : CharacterBody3D
     bool withinRange = false;
     bool attackChambered = false;
 
+    public string name = "Lola's enemy.";
+
     public override void _Ready()
     {
         base._Ready();
         aggroRange = GetNode<Area3D>("AggroRange");
         timer = GetNode<Timer>("CombatTimer");
         timer.WaitTime = attackSpeed;
-    }
-
-    public override void _Input(InputEvent @event)
-    {
-        base._Input(@event);
-        if (@event is InputEventMouseButton mouseButton)
-        {
-            if (mouseButton.Pressed)
-            {
-                GD.Print("Mob targetted by player");
-            }
-        }
     }
 
     public override void _Process(double delta)

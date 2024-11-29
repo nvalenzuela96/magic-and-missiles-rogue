@@ -48,4 +48,5 @@ shape = SubResource("CylinderShape3D_2d6yh")
 
 [node name="CombatTimer" type="Timer" parent="."]
 
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="timeout" from="CombatTimer" to="." method="_OnCombatTimerTimeout"]
