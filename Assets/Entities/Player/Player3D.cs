@@ -2,6 +2,7 @@ using Godot;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Player3D : CharacterBody3D
 {
@@ -20,14 +21,17 @@ public partial class Player3D : CharacterBody3D
 	float cameraSpeed = 3f;
 
 	[Export]
-	float healthPoints = 100f;
+	float maxHealthPoints = 100f;
 	[Export]
-	float manaPoints = 100f;
+	float maxManaPoints = 100f;
+
+	float currentHp;
+	float currentMana;
 
 	[Export]
 	float meleeRange = 2f;
     [Export]
-    float meleeDamage = 5f;
+    float meleeDamage = 2f;
     [Export]
     float attackSpeed = 3f;
 
@@ -44,10 +48,14 @@ public partial class Player3D : CharacterBody3D
 
 	private World world;
 	private HUD hud;
+	private ProgressBar healthBar;
+	private ProgressBar manaBar;
 
-    Mob target;
+    public Mob target;
+	List<Mob> attackerList;
 
-	Timer timer;
+
+    Timer timer;
 
     bool cameraPanned = false;
 	public bool inCombat = false;
@@ -64,6 +72,8 @@ public partial class Player3D : CharacterBody3D
 
 		world = GetParent<World>();
 		hud = GetNode<HUD>("HUD");
+		healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Health/HealthBar");
+		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Mana/ManaBar");
 		
 		playerCollider = GetNode<CollisionShape3D>("PlayerCollider");
 		playerMesh = GetNode<MeshInstance3D>("PlayerMesh");
@@ -71,6 +81,13 @@ public partial class Player3D : CharacterBody3D
 		timer = GetNode<Timer>("AttackTimer");
 
 		cameraBoom.SpringLength = zoomStart;
+
+		currentHp = maxHealthPoints;
+		currentMana = maxManaPoints;
+		healthBar.Value = currentHp;
+		manaBar.Value = currentMana;
+
+		attackerList = new();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -137,6 +154,7 @@ public partial class Player3D : CharacterBody3D
                     if (collision.Obj.GetType() == typeof(Mob))
                     {
                         target = (Mob)collision.Obj;
+						target.GetTargetted(this);
                         GD.Print(target.name);
                     }
                 }
@@ -148,9 +166,10 @@ public partial class Player3D : CharacterBody3D
 	{
 		base._PhysicsProcess(delta);
 
-        if (attackChambered && withinRange)
+        if (attackChambered && withinRange && target != null)
         {
             GD.Print("Player swing at target.");
+			target.TakeDamage(meleeDamage);
             attackChambered = false;
         }
         HandleMovement(delta);
@@ -215,12 +234,35 @@ public partial class Player3D : CharacterBody3D
         else
         {
             withinRange = false;
-            GD.Print("Target out of range");
         }
     }
 
 	private void _OnAttackTimerTimeout()
 	{
         attackChambered = true;
+    }
+
+    public void TakeDamage(float damageAmount)
+    {
+        currentHp -= damageAmount;
+		healthBar.Value = currentHp;
+        GD.Print($"Health is = {currentHp}");
+        if (currentHp <= 0)
+        {
+            foreach (var attacker in attackerList)
+            {
+                attacker.target = null;
+            }
+			GD.Print("Player is dead!");
+        }
+    }
+
+    public void GetTargetted(Mob enemy)
+    {
+        if (!attackerList.Contains(enemy))
+        {
+            attackerList.Add(enemy);
+            GD.Print($"{enemy} added to attacker list.");
+        }
     }
 }
