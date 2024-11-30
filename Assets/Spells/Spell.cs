@@ -37,7 +37,7 @@ public partial class Spell : CharacterBody3D
             }
         }
 
-        Velocity = Position.DirectionTo(target.Position) * 20f;
+        Velocity = Position.DirectionTo(target.Position) * 60f;
         MoveAndSlide();
     }
 }

@@ -1,4 +1,5 @@
 using Godot;
+using MagicandMissilesRogue.Assets.Entities.Player;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ public partial class Player3D : CharacterBody3D
 	private HUD hud;
 	private ProgressBar healthBar;
 	private ProgressBar manaBar;
+	private ProgressBar castBar;
 
 	private PanelContainer targetUnitFrame;
 	private ProgressBar targetHealthBar;
@@ -63,6 +65,9 @@ public partial class Player3D : CharacterBody3D
 
     public Mob target;
 	List<Mob> attackerList;
+
+	List<Item> inventory = new();
+	Equipment equipment = new();
 
     Timer attackTimer;
     Timer castTimer;
@@ -87,6 +92,7 @@ public partial class Player3D : CharacterBody3D
 
 		hud = GetNode<HUD>("HUD");
 		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterName;
+		castBar = hud.GetNode<ProgressBar>("CastBar");
 
         healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
 		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/ManaBar");
@@ -109,7 +115,28 @@ public partial class Player3D : CharacterBody3D
 		manaBar.Value = currentMana;
 
 		attackerList = new();
-	}
+
+		GD.Print(world);
+    }
+
+	private void HandleEquipment()
+	{
+		if (equipment.Head.Stat == "MaxHealth")
+		{
+			maxHealthPoints += equipment.Head.Value;
+			GD.Print($"Max health increased by {equipment.Head.Name}");
+		}
+        if (equipment.Body.Stat == "MaxHealth")
+        {
+            maxHealthPoints += equipment.Head.Value;
+            GD.Print($"Max health increased by {equipment.Body.Name}");
+        }
+        if (equipment.Melee.Stat == "Melee")
+        {
+            meleeDamage += equipment.Head.Value;
+            GD.Print($"Melee Damage increased by {equipment.Melee.Name}");
+        }
+    }
 
 	public override void _Input(InputEvent @event)
 	{
@@ -160,8 +187,18 @@ public partial class Player3D : CharacterBody3D
 		}
         if (Input.IsActionJustPressed("action_bar_1"))
         {
+            equipment.Head = world.items[0];
+            equipment.Body = world.items[1];
+            equipment.Melee = world.items[2];
+            inventory.Add(world.items[3]);
+            HandleEquipment();
+        }
+        /*
+        if (Input.IsActionJustPressed("action_bar_1"))
+        {
 			CastSpell(new Spell());
         }
+		*/
         if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
 		{
             var from = camera.ProjectRayOrigin(mouseButton.Position);
@@ -198,6 +235,11 @@ public partial class Player3D : CharacterBody3D
 			CheckRangeToTarget();
 			UpdateTargetUnitFrame();
         }
+		if (casting)
+		{
+			castBar.MaxValue = castingSpell.CastTime;
+			castBar.Value = castTimer.TimeLeft;
+		}
 	}
 
 	private void UpdateTargetUnitFrame()
@@ -214,6 +256,7 @@ public partial class Player3D : CharacterBody3D
 			casting = true;
 			castingSpell = spell;
 			castTimer.WaitTime = spell.CastTime;
+			castBar.Visible = true;
 			castTimer.Start();
 			GD.Print($"Casting {spell.SpellName}...");
 		}
@@ -318,6 +361,7 @@ public partial class Player3D : CharacterBody3D
         target.TakeDamage(castingSpell.Damage, this);
 		GD.Print($"{target.name} hit by {characterName} with {castingSpell.SpellName} for {castingSpell.Damage}!");
 		castingSpell = null;
+		castBar.Visible = false;
     }
 
     public void TakeDamage(float damageAmount)

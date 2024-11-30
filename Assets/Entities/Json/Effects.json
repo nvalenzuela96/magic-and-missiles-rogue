@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Armor",
+    "description": "Reduce damage",
+    "type": 0,
+    "value": 0.0,
+    "display": false,
+    "time": 0.0,
+    "timeRemaining": 0.0
+  }
+]

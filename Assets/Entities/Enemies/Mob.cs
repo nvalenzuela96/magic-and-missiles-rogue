@@ -29,6 +29,8 @@ public partial class Mob : CharacterBody3D
     bool withinRange = false;
     bool attackChambered = false;
 
+    bool alive = true;
+
     public string name = "Lola's Enemy";
 
     public override void _Ready()
@@ -44,22 +46,29 @@ public partial class Mob : CharacterBody3D
 
     public override void _Process(double delta)
     {
-        if (!aggroed)
+        if (alive)
         {
-            AggroFromIdle();
+            if (!aggroed)
+            {
+                AggroFromIdle();
+            }
+            else
+            {
+                if (target != null)
+                {
+                    GetInCombatRange();
+                }
+            }
+            if (attackChambered && withinRange && target != null)
+            {
+                GD.Print("Swing at target.");
+                target.TakeDamage(meleeDamage);
+                attackChambered = false;
+            }
         }
         else
         {
-            if (target != null)
-            {
-                GetInCombatRange();
-            }
-        }
-        if (attackChambered && withinRange && target != null)
-        {
-            GD.Print("Swing at target.");
-            target.TakeDamage(meleeDamage);
-            attackChambered = false;
+            RotationDegrees = new Vector3(90f, 0f, 0f);
         }
     }
 
@@ -119,13 +128,13 @@ public partial class Mob : CharacterBody3D
         GD.Print($"Health is = {currentHp}");
         if (currentHp <= 0)
         {
+            currentHp = 0;
             GD.Print("I'm dead!");
             foreach (var attacker in attackerList)
             {
-                attacker.target = null;
                 GD.Print($"Attacker target{attacker.target}");
             }
-            QueueFree();
+            alive = false;
         }
         if (!aggroed)
         {

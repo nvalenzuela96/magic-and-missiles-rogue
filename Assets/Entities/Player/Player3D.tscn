@@ -63,12 +63,12 @@ shape = SubResource("CapsuleShape3D_cd44v")
 [node name="CameraPivot" type="Node3D" parent="."]
 
 [node name="CameraBoom" type="SpringArm3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 0.979575, 0.201078, 0, -0.201078, 0.979575, 0, 0, -1)
 shape = SubResource("SeparationRayShape3D_m3gxn")
 spring_length = 4.0
 
 [node name="Camera" type="Camera3D" parent="CameraPivot/CameraBoom"]
-transform = Transform3D(1, 0, 0, 0, 0.976672, 0.214735, 0, -0.214735, 0.976672, 0, 3, 8)
+transform = Transform3D(1, 0, 0, 0, 0.976672, 0.214735, 0, -0.214735, 0.976672, 0, 4.3581, 8)
 current = true
 fov = 80.0
 

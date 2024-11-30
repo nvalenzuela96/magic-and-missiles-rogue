@@ -1,0 +1,30 @@
+[
+  {
+	"name": "Hat",
+	"description": "Cover your head",
+	"type": 0,
+	"stat": "MaxHealth",
+	"value":  2.0
+  },
+  {
+	"name": "Jacket",
+	"description": "Keeps you warm",
+	"type": 1,
+	"stat": "MaxHealth",
+	"value": 8.0
+  },
+  {
+	"name": "Knife",
+	"description": "Stabbing device",
+	"type": 2,
+	"stat": "Melee",
+	"value": 4.0
+  },
+  {
+	"name": "Hot Dog",
+	"description": "Hot dog with squiggly ketchup",
+	"type": 3,
+	"stat": "CurrentHealth",
+	"value": 12.0
+  }
+]

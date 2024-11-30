@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\entities\\player\\player3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\entities\\player\\player3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\entities\\player\\player3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\entities\\player\\player3d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\spells\\spell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\spells\\spell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\entities\\player\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\entities\\player\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\entities\\enemies\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\entities\\enemies\\mob.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\environments\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\environments\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\ui\\hud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\ui\\hud.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\environments\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{65EE8C21-2ECA-4391-925A-23FB18DD0ADB}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\environments\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|c:\\users\\nic\\documents\\repos\\magic-and-missiles-rogue\\assets\\entities\\player\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5F20506-F04A-4863-A005-806BE9823C9B}|Magic and Missiles Rogue.csproj|solutionrelative:assets\\entities\\player\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,15 +34,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Spell.cs",
-              "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Spells\\Spell.cs",
-              "RelativeDocumentMoniker": "Assets\\Spells\\Spell.cs",
-              "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Spells\\Spell.cs",
-              "RelativeToolTip": "Assets\\Spells\\Spell.cs",
-              "ViewState": "AQIAAAUAAAAAAAAAAAAQwBIAAAALAAAA",
+              "DocumentIndex": 3,
+              "Title": "Equipment.cs",
+              "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Player\\Equipment.cs",
+              "RelativeDocumentMoniker": "Assets\\Entities\\Player\\Equipment.cs",
+              "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Player\\Equipment.cs",
+              "RelativeToolTip": "Assets\\Entities\\Player\\Equipment.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-29T21:16:39.43Z",
+              "WhenOpened": "2024-11-30T22:47:52.017Z",
               "EditorCaption": ""
             },
             {
@@ -57,47 +53,36 @@
               "RelativeDocumentMoniker": "Assets\\Entities\\Player\\Player3D.cs",
               "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Player\\Player3D.cs",
               "RelativeToolTip": "Assets\\Entities\\Player\\Player3D.cs",
-              "ViewState": "AQIAACMBAAAAAAAAAAAAADwBAAAiAAAA",
+              "ViewState": "AQIAAK8AAAAAAAAAAAAlwLwAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-27T19:31:10.013Z",
+              "WhenOpened": "2024-11-30T22:46:29.669Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "HUD.cs",
-              "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\UI\\HUD.cs",
-              "RelativeDocumentMoniker": "Assets\\UI\\HUD.cs",
-              "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\UI\\HUD.cs",
-              "RelativeToolTip": "Assets\\UI\\HUD.cs",
+              "DocumentIndex": 1,
+              "Title": "Item.cs",
+              "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Player\\Item.cs",
+              "RelativeDocumentMoniker": "Assets\\Entities\\Player\\Item.cs",
+              "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Player\\Item.cs",
+              "RelativeToolTip": "Assets\\Entities\\Player\\Item.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-29T14:49:06.036Z"
+              "WhenOpened": "2024-11-30T22:46:25.878Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Mob.cs",
-              "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Enemies\\Mob.cs",
-              "RelativeDocumentMoniker": "Assets\\Entities\\Enemies\\Mob.cs",
-              "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Entities\\Enemies\\Mob.cs",
-              "RelativeToolTip": "Assets\\Entities\\Enemies\\Mob.cs",
-              "ViewState": "AQIAAEQAAAAAAAAAAAAiwFUAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-27T23:06:43.566Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "World.cs",
               "DocumentMoniker": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Environments\\World.cs",
               "RelativeDocumentMoniker": "Assets\\Environments\\World.cs",
               "ToolTip": "C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\\Assets\\Environments\\World.cs",
               "RelativeToolTip": "Assets\\Environments\\World.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-29T02:31:58.86Z"
+              "WhenOpened": "2024-11-30T22:43:50.161Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,15 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=6 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
+[ext_resource type="Texture2D" uid="uid://beagym445a2ik" path="res://Assets/UI/Icons/placeholder-icon.png" id="2_j4exc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4elc2"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(0.201527, 0.201527, 0.201526, 1)
+bg_color = Color(0.2, 0.2, 0.2, 0.529412)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0dyg1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xvhi0"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.2, 0.2, 0.2, 0.721569)
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -50,7 +62,6 @@ theme_override_colors/font_color = Color(0, 0, 1, 1)
 value = 100.0
 
 [node name="TargetUnitFrame" type="PanelContainer" parent="."]
-visible = false
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
 offset_left = 223.0
@@ -78,3 +89,83 @@ value = 100.0
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 1, 1)
 value = 100.0
+
+[node name="CastBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -149.0
+offset_top = -91.0
+offset_right = 149.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SpellBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -293.0
+offset_top = -47.0
+offset_right = 293.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xvhi0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SpellBar"]
+layout_mode = 2
+
+[node name="Slot1" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot2" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot3" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot4" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot5" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot6" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot7" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot8" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot9" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot10" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot11" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="Slot12" type="TextureButton" parent="SpellBar/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
