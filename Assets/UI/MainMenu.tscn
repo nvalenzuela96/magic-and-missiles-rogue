@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://csrs2xp2glchx"]
+
+[ext_resource type="Script" path="res://Assets/UI/MainMenu.cs" id="1_o84dp"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o84dp")
+
+[node name="VFlowContainer" type="VFlowContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 45.0
+offset_top = -20.0
+offset_right = 117.0
+offset_bottom = 82.0
+grow_vertical = 2
+
+[node name="Start" type="Button" parent="VFlowContainer"]
+layout_mode = 2
+text = "Start"
+
+[node name="Settings" type="Button" parent="VFlowContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="Quit" type="Button" parent="VFlowContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="VFlowContainer/Start" to="." method="_OnStartPressed"]
+[connection signal="pressed" from="VFlowContainer/Settings" to="." method="_OnSettingsPressed"]
+[connection signal="pressed" from="VFlowContainer/Quit" to="." method="_OnQuitPressed"]

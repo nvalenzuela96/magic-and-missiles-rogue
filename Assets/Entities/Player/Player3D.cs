@@ -1,5 +1,6 @@
 using Godot;
-using MagicandMissilesRogue.Assets.Entities.Player;
+using MagicandMissilesRogue.Assets.Entities.Scripts.Characters;
+using MagicandMissilesRogue.Assets.Entities.Scripts.Meta;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -63,11 +64,13 @@ public partial class Player3D : CharacterBody3D
 	private ProgressBar targetHealthBar;
 	private ProgressBar targetManaBar;
 
+	private PanelContainer charSheetPanel;
+
     public Mob target;
 	List<Mob> attackerList;
 
-	List<Item> inventory = new();
 	Equipment equipment = new();
+	CharacterSheet characterSheet = new();
 
     Timer attackTimer;
     Timer castTimer;
@@ -114,10 +117,35 @@ public partial class Player3D : CharacterBody3D
 		healthBar.Value = currentHp;
 		manaBar.Value = currentMana;
 
-		attackerList = new();
+		charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
+		ReadyCharacterSheet();
+        equipment.Head = world.equippables[0];
+        equipment.Body = world.equippables[1];
+        equipment.Melee = world.equippables[2];
+        HandleEquipment();
+        ReadyCharacterSheetPanel();
+
+        attackerList = new();
 
 		GD.Print(world);
     }
+
+	private void ReadyCharacterSheet()
+	{
+		characterSheet = new()
+		{
+			Name = "Tigginz"
+		};
+	}
+
+	private void ReadyCharacterSheetPanel()
+	{
+		charSheetPanel.GetNode<Label>("CSHContainer/Name").Text = characterSheet.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text += equipment.Head.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text += equipment.Body.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text += equipment.Melee.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text += equipment.Melee.Value.ToString();
+	}
 
 	private void HandleEquipment()
 	{
@@ -131,7 +159,7 @@ public partial class Player3D : CharacterBody3D
             maxHealthPoints += equipment.Head.Value;
             GD.Print($"Max health increased by {equipment.Body.Name}");
         }
-        if (equipment.Melee.Stat == "Melee")
+        if (equipment.Melee.Stat == "MeleeDamage")
         {
             meleeDamage += equipment.Head.Value;
             GD.Print($"Melee Damage increased by {equipment.Melee.Name}");
@@ -185,13 +213,26 @@ public partial class Player3D : CharacterBody3D
 				GD.Print(cameraBoom.SpringLength);
 			}
 		}
+		if (Input.IsActionJustPressed("character_sheet"))
+		{
+			if (!charSheetPanel.Visible)
+			{
+                charSheetPanel.Visible = true;
+            }
+			else
+			{
+				charSheetPanel.Visible = false;
+			}
+        }
         if (Input.IsActionJustPressed("action_bar_1"))
         {
+			/*
             equipment.Head = world.items[0];
             equipment.Body = world.items[1];
             equipment.Melee = world.items[2];
             inventory.Add(world.items[3]);
             HandleEquipment();
+			*/
         }
         /*
         if (Input.IsActionJustPressed("action_bar_1"))

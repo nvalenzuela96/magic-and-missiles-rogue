@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://eao44nyiswa2"]
+[gd_scene load_steps=12 format=3 uid="uid://eao44nyiswa2"]
 
 [ext_resource type="Script" path="res://Assets/Environments/World.cs" id="1_vfbev"]
 [ext_resource type="Texture2D" uid="uid://cbfv8p3sewgeb" path="res://Assets/Environments/Textures/prototype-floor.png" id="2_qj1qd"]
-[ext_resource type="PackedScene" uid="uid://c5ql41yrtnssf" path="res://Assets/Entities/Player/Player3D.tscn" id="2_wdvjv"]
 [ext_resource type="PackedScene" uid="uid://dr4vmdotiyjfa" path="res://Assets/Entities/Enemies/Mob.tscn" id="3_yta3x"]
 [ext_resource type="Texture2D" uid="uid://c0iwr3gifcogq" path="res://Assets/Environments/Textures/prototype-wall.png" id="5_sncrx"]
 
@@ -43,9 +42,6 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_mnsde")
-
-[node name="Player3D" parent="." instance=ExtResource("2_wdvjv")]
-meleeDamage = 5.0
 
 [node name="Mob" parent="." instance=ExtResource("3_yta3x")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 1.0272, -18)

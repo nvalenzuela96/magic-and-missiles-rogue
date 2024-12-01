@@ -1,0 +1,23 @@
+[
+	{
+	  "name": "Hat",
+	  "description": "Cover your head",
+	  "equipmentType": 0,
+	  "stat": "Armor",
+	  "value": 2.0,
+	},
+	{
+	  "name": "Jacket",
+	  "description": "Keeps you warm",
+	  "equipmentType": 1,
+	  "stat": "Armor",
+	  "value": 10.0,
+	},
+	{
+	  "name": "Knife",
+	  "description": "Stabbing device",
+	  "equipmentType": 2,
+	  "stat": "MeleeDamage",
+	  "value": 4.0,
+	}
+]

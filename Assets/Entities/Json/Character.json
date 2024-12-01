@@ -1,0 +1,12 @@
+{
+  "name": "Tigginz",
+  "strength": 5.0,
+  "constitution": 10.0,
+  "intelligence": 8.0,
+  "maxHealth": 100.0,
+  "currentHealth": 100.0,
+  "maxMana": 100.0,
+  "currentMana": 100.0,
+  "armor": 0.0,
+  "speed": 0.0
+}
