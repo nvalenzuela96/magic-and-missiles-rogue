@@ -1,0 +1,82 @@
+[gd_scene load_steps=13 format=3 uid="uid://ceka2yu6ag3sl"]
+
+[ext_resource type="Texture2D" uid="uid://cbfv8p3sewgeb" path="res://Assets/Environments/Textures/prototype-floor.png" id="1_ogqjf"]
+[ext_resource type="Texture2D" uid="uid://c0iwr3gifcogq" path="res://Assets/Environments/Textures/prototype-wall.png" id="2_bcc0a"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sywhf"]
+size = Vector2(60, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8th3v"]
+albedo_texture = ExtResource("1_ogqjf")
+uv1_scale = Vector3(20, 52, 52)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uawpm"]
+size = Vector3(6, 10, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ojwn"]
+albedo_texture = ExtResource("2_bcc0a")
+uv1_scale = Vector3(20, 27, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w61cp"]
+albedo_texture = ExtResource("2_bcc0a")
+uv1_scale = Vector3(20, 27, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orr7s"]
+albedo_texture = ExtResource("2_bcc0a")
+uv1_scale = Vector3(20, 27, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bxlh5"]
+size = Vector3(60, 10, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jb506"]
+albedo_texture = ExtResource("2_bcc0a")
+uv1_scale = Vector3(180, 27, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_earbx"]
+albedo_texture = ExtResource("2_bcc0a")
+uv1_scale = Vector3(180, 27, 50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_duwc7"]
+
+[node name="RoomContainer3" type="Node3D"]
+transform = Transform3D(0.269239, 0, 0, 0, 1, 0, 0, 0, 0.76146, 0, 0, 0)
+
+[node name="Room" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Room"]
+use_collision = true
+mesh = SubResource("PlaneMesh_sywhf")
+material = SubResource("StandardMaterial3D_8th3v")
+
+[node name="CSGMesh3D6" type="CSGMesh3D" parent="Room"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -30, 5, 7)
+mesh = SubResource("BoxMesh_uawpm")
+material = SubResource("StandardMaterial3D_5ojwn")
+
+[node name="CSGMesh3D7" type="CSGMesh3D" parent="Room"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -30, 5, -7)
+mesh = SubResource("BoxMesh_uawpm")
+material = SubResource("StandardMaterial3D_w61cp")
+
+[node name="CSGMesh3D8" type="CSGMesh3D" parent="Room"]
+transform = Transform3D(-1.52451e-07, 0, 1, 0, 1, 0, -3.48768, 0, -4.37114e-08, 30, 5, -0.00288497)
+mesh = SubResource("BoxMesh_uawpm")
+material = SubResource("StandardMaterial3D_orr7s")
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 10)
+mesh = SubResource("BoxMesh_bxlh5")
+material = SubResource("StandardMaterial3D_jb506")
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -10)
+mesh = SubResource("BoxMesh_bxlh5")
+material = SubResource("StandardMaterial3D_earbx")
+
+[node name="RoomConnectorFrom" type="Area3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
+metadata/From = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Room/RoomConnectorFrom"]
+shape = SubResource("BoxShape3D_duwc7")

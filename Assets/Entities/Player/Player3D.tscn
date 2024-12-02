@@ -1,27 +1,26 @@
-[gd_scene load_steps=12 format=3 uid="uid://c5ql41yrtnssf"]
+[gd_scene load_steps=11 format=3 uid="uid://c5ql41yrtnssf"]
 
 [ext_resource type="Script" path="res://Assets/Entities/Player/Player3D.cs" id="1_3g1qd"]
 [ext_resource type="PackedScene" uid="uid://dnhkc2d4pua13" path="res://Assets/UI/HUD.tscn" id="2_17v8i"]
-[ext_resource type="PackedScene" uid="uid://cs264vqssbqv1" path="res://Assets/Spells/ProjectileSpell.tscn" id="2_wqmob"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmd7a"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r68w6"]
 albedo_color = Color(1, 0.454902, 0, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_basn5"]
-material = SubResource("StandardMaterial3D_cmd7a")
+material = SubResource("StandardMaterial3D_r68w6")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2qce"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1lfq"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_b5ye8"]
-material = SubResource("StandardMaterial3D_v2qce")
+material = SubResource("StandardMaterial3D_d1lfq")
 radius = 0.1
 height = 0.2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tub2j"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i06h7"]
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_phxse"]
-material = SubResource("StandardMaterial3D_tub2j")
+material = SubResource("StandardMaterial3D_i06h7")
 radius = 0.05
 height = 0.1
 
@@ -36,7 +35,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01129, 0)
 collision_layer = 7
 collision_mask = 3
 script = ExtResource("1_3g1qd")
-spellProjectile = ExtResource("2_wqmob")
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_basn5")
