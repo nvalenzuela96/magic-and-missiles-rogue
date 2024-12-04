@@ -1,4 +1,5 @@
 using Godot;
+using MagicandMissilesRogue.Assets.Entities.Scripts.Characters;
 using System;
 
 public partial class Spell : CharacterBody3D
@@ -17,6 +18,7 @@ public partial class Spell : CharacterBody3D
     public bool AttackSpell { get; set; } = true;
 
     public Mob target;
+    public Player3D caster;
     Area3D area;
 
     public override void _Ready()
@@ -33,6 +35,8 @@ public partial class Spell : CharacterBody3D
         {
             if (area.GetOverlappingBodies()[0] == target)
             {
+                target.TakeDamage(Damage, caster);
+                GD.Print($"{target.name} hit by {caster.characterSheet.Name} with {SpellName} for {Damage}!");
                 QueueFree();
             }
         }

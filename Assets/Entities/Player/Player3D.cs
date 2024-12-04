@@ -23,26 +23,14 @@ public partial class Player3D : CharacterBody3D
 	float zoomStart = 8f;
 	[Export]
 	float cameraSpeed = 3f;
-	[Export]
-	string characterName = "Tigginz";
+    [Export]
+    PackedScene spellProjectile;
 
-	[Export]
-	float maxHealthPoints = 100f;
-	[Export]
-	float maxManaPoints = 100f;
+    [Export]
+    float meleeRange = 2f;
 
-	[Export]
-	PackedScene spellProjectile;
-
-	float currentHp;
+    float currentHp;
 	float currentMana;
-
-	[Export]
-	float meleeRange = 2f;
-    [Export]
-    float meleeDamage = 2f;
-    [Export]
-    float attackSpeed = 3f;
 
     private Camera3D camera;
 	private SpringArm3D cameraBoom;
@@ -70,7 +58,7 @@ public partial class Player3D : CharacterBody3D
     public Mob target;
 	List<Mob> attackerList;
 
-	CharacterSheet characterSheet = new();
+	public CharacterSheet characterSheet = new();
 
     Timer attackTimer;
     Timer castTimer;
@@ -89,12 +77,14 @@ public partial class Player3D : CharacterBody3D
 		cameraBoom = GetNode<SpringArm3D>("CameraPivot/CameraBoom");
 		camera = GetNode<Camera3D>("CameraPivot/CameraBoom/Camera");
 
-		pov = GetNode<Camera3D>("CharacterPOV");
+        ReadyCharacterSheet();
+
+        pov = GetNode<Camera3D>("CharacterPOV");
 
 		world = GetParent<World>();
 
 		hud = GetNode<HUD>("HUD");
-		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterName;
+		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterSheet.Name;
 		castBar = hud.GetNode<ProgressBar>("CastBar");
 
         healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
@@ -112,13 +102,13 @@ public partial class Player3D : CharacterBody3D
 
 		cameraBoom.SpringLength = zoomStart;
 
-		currentHp = maxHealthPoints;
-		currentMana = maxManaPoints;
+		currentHp = characterSheet.CurrentHealth.Value;
+		currentMana = characterSheet.CurrentMana.Value;
 		healthBar.Value = currentHp;
 		manaBar.Value = currentMana;
 
 		charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
-		ReadyCharacterSheet();
+
         PutOnEquipment(world.equippables.First(e => e.Name == "Hat"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Jacket"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Knife"));
@@ -143,9 +133,9 @@ public partial class Player3D : CharacterBody3D
 		charSheetPanel.GetNode<Label>("CSHContainer/Armor").Text += characterSheet.Armor.Value;
 		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text += characterSheet.Equipment.Melee.Name;
 		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text += characterSheet.WeaponDamage.Value;
-		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
-		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
-		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/WeaponSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
+		charSheetPanel.GetNode<TextureButton>("EquipmentL/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
+		charSheetPanel.GetNode<TextureButton>("EquipmentL/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
+		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/MainHand").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
 	}
 
 	private void PutOnEquipment(Equippable equipment)
@@ -267,22 +257,12 @@ public partial class Player3D : CharacterBody3D
 				charSheetPanel.Visible = false;
 			}
         }
-        if (Input.IsActionJustPressed("action_bar_1"))
-        {
-			/*
-            equipment.Head = world.items[0];
-            equipment.Body = world.items[1];
-            equipment.Melee = world.items[2];
-            inventory.Add(world.items[3]);
-            HandleEquipment();
-			*/
-        }
-        /*
+
         if (Input.IsActionJustPressed("action_bar_1"))
         {
 			CastSpell(new Spell());
         }
-		*/
+
         if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
 		{
             var from = camera.ProjectRayOrigin(mouseButton.Position);
@@ -310,7 +290,7 @@ public partial class Player3D : CharacterBody3D
         if (attackChambered && withinRange && target != null)
         {
             GD.Print("Player swing at target.");
-			target.TakeDamage(meleeDamage, this);
+			target.TakeDamage(characterSheet.WeaponDamage.Value, this);
             attackChambered = false;
         }
         HandleMovement(delta);
@@ -440,10 +420,9 @@ public partial class Player3D : CharacterBody3D
         casting = false;
 		Spell spellDraw = (Spell)spellProjectile.Instantiate();
 		spellDraw.target = target;
+		spellDraw.caster = this;
 		world.AddChild(spellDraw);
 		spellDraw.Transform = Transform;
-        target.TakeDamage(castingSpell.Damage, this);
-		GD.Print($"{target.name} hit by {characterName} with {castingSpell.SpellName} for {castingSpell.Damage}!");
 		castingSpell = null;
 		castBar.Visible = false;
     }

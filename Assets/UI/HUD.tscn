@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=8 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
 [ext_resource type="Texture2D" uid="uid://beagym445a2ik" path="res://Assets/UI/Icons/placeholder-icon.png" id="2_j4exc"]
@@ -17,14 +17,25 @@ corner_radius_bottom_left = 5
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0dyg1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xvhi0"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0.2, 0.2, 0.2, 0.721569)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lk0pq"]
 bg_color = Color(0.2, 0.2, 0.2, 0.686275)
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k8muk"]
+bg_color = Color(0.14902, 0.14902, 0.14902, 0.647059)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 expand_margin_left = 5.0
 expand_margin_top = 5.0
 expand_margin_right = 5.0
@@ -105,9 +116,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -149.0
-offset_top = -91.0
+offset_top = -98.0
 offset_right = 149.0
-offset_bottom = -64.0
+offset_bottom = -71.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -178,6 +189,7 @@ layout_mode = 2
 texture_normal = ExtResource("2_j4exc")
 
 [node name="Inventory" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -249,15 +261,27 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 10.0
+offset_left = 17.0
 offset_top = -200.0
-offset_right = 292.0
+offset_right = 299.0
 offset_bottom = 135.0
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_k8muk")
+
+[node name="EquipmentL" type="VFlowContainer" parent="CharacterSheet"]
+layout_mode = 2
+
+[node name="HeadSlot" type="TextureButton" parent="CharacterSheet/EquipmentL"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
+
+[node name="BodySlot" type="TextureButton" parent="CharacterSheet/EquipmentL"]
+layout_mode = 2
+texture_normal = ExtResource("2_j4exc")
 
 [node name="CSHContainer" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 
 [node name="Name" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
@@ -284,17 +308,21 @@ text = "Melee Damage: "
 
 [node name="EquipmentContainer" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 4
+size_flags_vertical = 8
 alignment = 1
 
-[node name="HeadSlot" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
+[node name="MainHand" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
 texture_normal = ExtResource("2_j4exc")
 
-[node name="BodySlot" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
+[node name="OffHand" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
 texture_normal = ExtResource("2_j4exc")
 
-[node name="WeaponSlot" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
+[node name="Ranged" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
 texture_normal = ExtResource("2_j4exc")
+
+[node name="EquipmentR" type="VFlowContainer" parent="CharacterSheet"]
+layout_mode = 2
