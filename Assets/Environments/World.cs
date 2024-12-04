@@ -28,12 +28,8 @@ public partial class World : Node3D
 
 	private void SeedData()
 	{
-        var fileName = "res://Assets/Entities/Json/Equippables.json";
+        var fileName = "res://Assets/Entities/Json/Items.json";
         var jsonString = FileAccess.GetFileAsString(fileName);
         equippables = JsonConvert.DeserializeObject<List<Equippable>>(jsonString);
-		foreach (var equippable in equippables)
-		{
-			GD.Print(equippable.Name);
-		}
     }
 }

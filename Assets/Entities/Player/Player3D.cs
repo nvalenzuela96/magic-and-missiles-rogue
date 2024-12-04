@@ -5,6 +5,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using static Godot.HttpRequest;
 
 public partial class Player3D : CharacterBody3D
@@ -69,7 +70,6 @@ public partial class Player3D : CharacterBody3D
     public Mob target;
 	List<Mob> attackerList;
 
-	Equipment equipment = new();
 	CharacterSheet characterSheet = new();
 
     Timer attackTimer;
@@ -119,15 +119,12 @@ public partial class Player3D : CharacterBody3D
 
 		charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
 		ReadyCharacterSheet();
-        equipment.Head = world.equippables[0];
-        equipment.Body = world.equippables[1];
-        equipment.Melee = world.equippables[2];
-        HandleEquipment();
+        PutOnEquipment(world.equippables.First(e => e.Name == "Hat"));
+        PutOnEquipment(world.equippables.First(e => e.Name == "Jacket"));
+        PutOnEquipment(world.equippables.First(e => e.Name == "Knife"));
         ReadyCharacterSheetPanel();
 
         attackerList = new();
-
-		GD.Print(world);
     }
 
 	private void ReadyCharacterSheet()
@@ -141,30 +138,73 @@ public partial class Player3D : CharacterBody3D
 	private void ReadyCharacterSheetPanel()
 	{
 		charSheetPanel.GetNode<Label>("CSHContainer/Name").Text = characterSheet.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text += equipment.Head.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text += equipment.Body.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text += equipment.Melee.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text += equipment.Melee.Value.ToString();
+		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text += characterSheet.Equipment.Head.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text += characterSheet.Equipment.Body.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/Armor").Text += characterSheet.Armor.Value;
+		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text += characterSheet.Equipment.Melee.Name;
+		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text += characterSheet.WeaponDamage.Value;
+		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
+		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
+		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/WeaponSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
 	}
 
-	private void HandleEquipment()
+	private void PutOnEquipment(Equippable equipment)
 	{
-		if (equipment.Head.Stat == "MaxHealth")
+		foreach (var property in characterSheet.Equipment.GetType().GetProperties())
 		{
-			maxHealthPoints += equipment.Head.Value;
-			GD.Print($"Max health increased by {equipment.Head.Name}");
+            if (property.Name == equipment.EquipmentType.ToString())
+			{
+				GD.Print(equipment.Name);
+				Equippable oldEquipped = (Equippable)characterSheet.Equipment.GetType().GetProperty(property.Name).GetValue(characterSheet.Equipment);
+				RemoveEquipment(oldEquipped);
+                property.SetValue(characterSheet.Equipment, equipment);
+				AddNewEquipmentStat(equipment.MainStat);
+				foreach(var statModifier in equipment.StatModifiers)
+				{
+					if (statModifier != null)
+					{
+                        AddNewEquipmentStat(statModifier);
+                    }
+				}
+			}
 		}
-        if (equipment.Body.Stat == "MaxHealth")
-        {
-            maxHealthPoints += equipment.Head.Value;
-            GD.Print($"Max health increased by {equipment.Body.Name}");
+	}
+
+	private void RemoveEquipment(Equippable equipment)
+	{
+		RemoveOldEquipmentStat(equipment.MainStat);
+		foreach(var statModifier in equipment.StatModifiers)
+		{
+            if (statModifier != null)
+            {
+                RemoveOldEquipmentStat(statModifier);
+            }
         }
-        if (equipment.Melee.Stat == "MeleeDamage")
-        {
-            meleeDamage += equipment.Head.Value;
-            GD.Print($"Melee Damage increased by {equipment.Melee.Name}");
-        }
-    }
+	}
+
+    private void RemoveOldEquipmentStat(StatModifier statModifier)
+	{
+		foreach (var property in characterSheet.GetType().GetProperties())
+		{
+			if (property.Name == statModifier.StatType.ToString())
+			{
+				Stat stat = (Stat)characterSheet.GetType().GetProperty(property.Name).GetValue(characterSheet);
+				stat.RemoveModifier(statModifier);
+            }
+		}
+	}
+	
+	private void AddNewEquipmentStat(StatModifier statModifier)
+	{
+		foreach (var property in characterSheet.GetType().GetProperties())
+		{
+			if (property.Name == statModifier.StatType.ToString())
+			{
+				Stat stat = (Stat)characterSheet.GetType().GetProperty(property.Name).GetValue(characterSheet);
+				stat.AddModifier(statModifier);
+			}
+		}
+	}
 
 	public override void _Input(InputEvent @event)
 	{
@@ -215,6 +255,9 @@ public partial class Player3D : CharacterBody3D
 		}
 		if (Input.IsActionJustPressed("character_sheet"))
 		{
+			GD.Print(characterSheet.Equipment.Head.Name);
+			GD.Print(characterSheet.Equipment.Body.Name);
+			GD.Print(characterSheet.Equipment.Melee.Name);
 			if (!charSheetPanel.Visible)
 			{
                 charSheetPanel.Visible = true;

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Magic and Missiles Rogue": {
+      "commandName": "Project",
+      "commandLineArgs": "-e --path \"C:\\Users\\Nic\\Documents\\repos\\magic-and-missiles-rogue\""
+    }
+  }
+}

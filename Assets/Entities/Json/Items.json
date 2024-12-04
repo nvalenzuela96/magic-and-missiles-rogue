@@ -2,29 +2,31 @@
   {
 	"name": "Hat",
 	"description": "Cover your head",
-	"type": 0,
-	"stat": "MaxHealth",
-	"value":  2.0
+	"equipmentType": 0,
+	"icon": "res://Assets/UI/Icons/hat-icon.png",
+	"mainStat": {
+		"value": 3.0,
+		"statType": 4
+	}
   },
   {
 	"name": "Jacket",
 	"description": "Keeps you warm",
-	"type": 1,
-	"stat": "MaxHealth",
-	"value": 8.0
+	"equipmentType": 1,
+	"icon": "res://Assets/UI/Icons/jacket-icon.png",
+	"mainStat": {
+		"value": 10.0,
+		"statType": 4
+	}
   },
   {
 	"name": "Knife",
 	"description": "Stabbing device",
-	"type": 2,
-	"stat": "Melee",
-	"value": 4.0
-  },
-  {
-	"name": "Hot Dog",
-	"description": "Hot dog with squiggly ketchup",
-	"type": 3,
-	"stat": "CurrentHealth",
-	"value": 12.0
+	"equipmentType": 2,
+	"icon": "res://Assets/UI/Icons/knife-icon.png",
+	"mainStat": {
+		"value": 6.0,
+		"statType": 3
+	}
   }
 ]

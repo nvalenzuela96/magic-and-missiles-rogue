@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace MagicandMissilesRogue.Assets.Entities.Scripts.Meta
 {
-    public enum EffectTypes
+    public enum StatTypes
     {
-        Buff,
-        Debuff,
-        Attack,
-        Heal
+        Strength,
+        Constitution,
+        Intelligence,
+        WeaponDamage,
+        Armor
     }
 }

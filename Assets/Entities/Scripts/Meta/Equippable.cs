@@ -9,7 +9,8 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Meta
     public partial class Equippable : Item
     {
         public EquipmentTypes EquipmentType { get; set; }
-        public string Stat {  get; set; }
-        public float Value { get; set; }
+        public StatModifier MainStat { get; set; }
+        public List<StatModifier> StatModifiers { get; set; } = new List<StatModifier>();
+        public string Icon { get; set; } = "res://Assets/UI/Icons/missing-icon.png";
     }
 }

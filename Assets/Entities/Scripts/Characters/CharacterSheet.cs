@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagicandMissilesRogue.Assets.Entities.Scripts.Meta;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,15 +10,16 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Characters
     public class CharacterSheet
     {
         public string Name { get; set; }
-        public float Strength { get; set; } = 0f;
-        public float Constitution { get; set; } = 0f;
-        public float Intelligence { get; set; } = 0f;
-        public float MaxHealth { get; set; } = 100f;
-        public float CurrentHealth { get; set; } = 100f;
-        public float MaxMana { get; set; } = 0f;
-        public float CurrentMana { get; set; } = 0f;
-        public float Armor { get; set; } = 0f;
-        public float Speed { get; set; } = 0f;
-        public float MeleeDamage { get; set; } = 0f;
+        public Stat Strength { get; set; } = new Stat(1f);
+        public Stat Constitution { get; set; } = new Stat(1f);
+        public Stat Intelligence { get; set; } = new Stat(1f);
+        public Stat MaxHealth { get; set; } = new Stat(1f);
+        public Stat CurrentHealth { get; set; } = new Stat(1f);
+        public Stat MaxMana { get; set; } = new Stat(1f);
+        public Stat CurrentMana { get; set; } = new Stat(1f);
+        public Stat Armor { get; set; } = new Stat(1f);
+        public Stat Speed { get; set; } = new Stat(1f);
+        public Stat WeaponDamage { get; set; } = new Stat(1f);
+        public Equipment Equipment { get; set; } = new Equipment();
     }
 }
