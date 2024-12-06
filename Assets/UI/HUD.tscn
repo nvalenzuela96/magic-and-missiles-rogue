@@ -1,45 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=4 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
+[ext_resource type="Theme" uid="uid://d0jyr5rjnbboj" path="res://Assets/UI/Styles/UITheme.tres" id="2_52shf"]
 [ext_resource type="Texture2D" uid="uid://beagym445a2ik" path="res://Assets/UI/Icons/placeholder-icon.png" id="2_j4exc"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4elc2"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
-bg_color = Color(0.2, 0.2, 0.2, 0.529412)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0dyg1"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xvhi0"]
-content_margin_left = 5.0
-content_margin_top = 5.0
-content_margin_right = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.2, 0.2, 0.2, 0.721569)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lk0pq"]
-bg_color = Color(0.2, 0.2, 0.2, 0.686275)
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k8muk"]
-bg_color = Color(0.14902, 0.14902, 0.14902, 0.647059)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -48,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_52shf")
 script = ExtResource("1_j5rrb")
 
 [node name="PlayerUnitFrame" type="PanelContainer" parent="."]
@@ -57,58 +21,66 @@ offset_left = 10.0
 offset_top = 10.0
 offset_right = 210.0
 offset_bottom = 105.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_4elc2")
+theme = ExtResource("2_52shf")
 
 [node name="Grid" type="GridContainer" parent="PlayerUnitFrame"]
 layout_mode = 2
-theme_override_constants/v_separation = 10
+theme = ExtResource("2_52shf")
 
 [node name="Name" type="Label" parent="PlayerUnitFrame/Grid"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 horizontal_alignment = 1
 
 [node name="HealthBar" type="ProgressBar" parent="PlayerUnitFrame/Grid"]
 custom_minimum_size = Vector2(200, 25)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_styles/background = SubResource("StyleBoxTexture_0dyg1")
+theme = ExtResource("2_52shf")
+theme_type_variation = &"HealthBar"
 value = 100.0
 
 [node name="ManaBar" type="ProgressBar" parent="PlayerUnitFrame/Grid"]
+custom_minimum_size = Vector2(200, 25)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme = ExtResource("2_52shf")
+theme_type_variation = &"ManaBar"
 value = 100.0
 
 [node name="TargetUnitFrame" type="PanelContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
 offset_left = 223.0
 offset_top = 10.0
-offset_right = 427.0
-offset_bottom = 109.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_4elc2")
+offset_right = 423.0
+offset_bottom = 105.0
+theme = ExtResource("2_52shf")
 
 [node name="Grid" type="GridContainer" parent="TargetUnitFrame"]
 layout_mode = 2
-theme_override_constants/v_separation = 10
+theme = ExtResource("2_52shf")
 
 [node name="Name" type="Label" parent="TargetUnitFrame/Grid"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 horizontal_alignment = 1
 
 [node name="HealthBar" type="ProgressBar" parent="TargetUnitFrame/Grid"]
 custom_minimum_size = Vector2(200, 25)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_styles/background = SubResource("StyleBoxTexture_0dyg1")
-value = 100.0
+theme = ExtResource("2_52shf")
+theme_type_variation = &"HealthBar"
+value = 20.0
 
 [node name="ManaBar" type="ProgressBar" parent="TargetUnitFrame/Grid"]
+custom_minimum_size = Vector2(200, 25)
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme = ExtResource("2_52shf")
+theme_type_variation = &"ManaBar"
 value = 100.0
 
 [node name="CastBar" type="ProgressBar" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -121,6 +93,7 @@ offset_right = 149.0
 offset_bottom = -71.0
 grow_horizontal = 2
 grow_vertical = 0
+theme = ExtResource("2_52shf")
 
 [node name="SpellBar" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -130,66 +103,18 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -293.0
-offset_top = -47.0
+offset_top = -69.0
 offset_right = 293.0
 offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_xvhi0")
+theme = ExtResource("2_52shf")
 
-[node name="SpellGrid" type="HBoxContainer" parent="SpellBar"]
+[node name="SpellList" type="ItemList" parent="SpellBar"]
 layout_mode = 2
-
-[node name="Slot1" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot2" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot3" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot4" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot5" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot6" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot7" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot8" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot9" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot10" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot11" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot12" type="TextureButton" parent="SpellBar/SpellGrid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
+max_columns = 12
 
 [node name="Inventory" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -197,132 +122,107 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -264.0
-offset_top = -41.0
-offset_right = -52.0
-offset_bottom = 119.0
+offset_top = -45.0
+offset_right = -31.0
+offset_bottom = 125.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_lk0pq")
+mouse_filter = 2
+theme = ExtResource("2_52shf")
 
-[node name="Item Grid" type="GridContainer" parent="Inventory"]
+[node name="ItemList" type="ItemList" parent="Inventory"]
 layout_mode = 2
-columns = 4
-
-[node name="Slot1" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot2" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot3" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot4" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot5" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot6" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot7" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot8" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot9" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot10" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot11" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
-
-[node name="Slot12" type="TextureButton" parent="Inventory/Item Grid"]
-layout_mode = 2
-texture_normal = ExtResource("2_j4exc")
+theme = ExtResource("2_52shf")
+auto_height = true
+max_columns = 4
+same_column_width = true
 
 [node name="CharacterSheet" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -200.0
-offset_right = 299.0
-offset_bottom = 135.0
+offset_left = 11.0
+offset_top = -194.0
+offset_right = 293.0
+offset_bottom = 141.0
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_k8muk")
+theme = ExtResource("2_52shf")
 
 [node name="EquipmentL" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 
 [node name="HeadSlot" type="TextureButton" parent="CharacterSheet/EquipmentL"]
 layout_mode = 2
+tooltip_text = "Test"
+theme = ExtResource("2_52shf")
 texture_normal = ExtResource("2_j4exc")
 
 [node name="BodySlot" type="TextureButton" parent="CharacterSheet/EquipmentL"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 texture_normal = ExtResource("2_j4exc")
 
 [node name="CSHContainer" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme = ExtResource("2_52shf")
 
 [node name="Name" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 text = "Character Name"
 
 [node name="Head" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 text = "Head: "
 
 [node name="Body" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 text = "Body: "
 
 [node name="Armor" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
+text = "Armor: "
 
 [node name="Melee" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 text = "Melee Weapon: "
 
 [node name="MeleeDamage" type="Label" parent="CharacterSheet/CSHContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 text = "Melee Damage: "
 
 [node name="EquipmentContainer" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
+theme = ExtResource("2_52shf")
 alignment = 1
 
 [node name="MainHand" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 texture_normal = ExtResource("2_j4exc")
 
 [node name="OffHand" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 texture_normal = ExtResource("2_j4exc")
 
 [node name="Ranged" type="TextureButton" parent="CharacterSheet/EquipmentContainer"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
 texture_normal = ExtResource("2_j4exc")
 
 [node name="EquipmentR" type="VFlowContainer" parent="CharacterSheet"]
 layout_mode = 2
+theme = ExtResource("2_52shf")
+
+[connection signal="item_clicked" from="Inventory/ItemList" to="." method="_OnItemListItemClicked"]

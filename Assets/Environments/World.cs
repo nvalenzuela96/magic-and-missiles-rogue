@@ -9,8 +9,7 @@ using System.Text.Json.Serialization;
 public partial class World : Node3D
 {
 	public List<Equippable> equippables;
-	public Equipment Equipment;
-	public Inventory Inventory;
+	public List<Consumable> consumables;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -31,5 +30,9 @@ public partial class World : Node3D
         var fileName = "res://Assets/Entities/Json/Items.json";
         var jsonString = FileAccess.GetFileAsString(fileName);
         equippables = JsonConvert.DeserializeObject<List<Equippable>>(jsonString);
+
+        fileName = "res://Assets/Entities/Json/Consumables.json";
+        jsonString = FileAccess.GetFileAsString(fileName);
+        consumables = JsonConvert.DeserializeObject<List<Consumable>>(jsonString);
     }
 }

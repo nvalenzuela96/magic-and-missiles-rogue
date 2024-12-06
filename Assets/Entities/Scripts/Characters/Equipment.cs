@@ -9,7 +9,7 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Characters
     {
         public Equippable Head { get; set; } = new Equippable()
         { 
-            Name = "",
+            Name = "None",
             Description = "",
             EquipmentType = EquipmentTypes.Head ,
             MainStat = new StatModifier()
@@ -21,7 +21,7 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Characters
 
         public Equippable Body { get; set; } = new Equippable()
         {
-            Name = "",
+            Name = "None",
             Description = "",
             EquipmentType = EquipmentTypes.Body,
             MainStat = new StatModifier()
@@ -33,7 +33,7 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Characters
 
         public Equippable Melee { get; set; } = new Equippable()
         {
-            Name = "",
+            Name = "None",
             Description = "",
             EquipmentType = EquipmentTypes.Melee,
             MainStat = new StatModifier()

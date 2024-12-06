@@ -53,6 +53,10 @@ public partial class Player3D : CharacterBody3D
 	private ProgressBar targetHealthBar;
 	private ProgressBar targetManaBar;
 
+	private PanelContainer inventoryPanel;
+	private ItemList itemList;
+	public Inventory inventory = new();
+
 	private PanelContainer charSheetPanel;
 
     public Mob target;
@@ -63,7 +67,10 @@ public partial class Player3D : CharacterBody3D
     Timer attackTimer;
     Timer castTimer;
 
-	public Spell castingSpell;
+	public List<Spell> spellList = new();
+    private ItemList spellBar;
+
+    public Spell castingSpell;
 
     bool cameraPanned = false;
 	public bool inCombat = false;
@@ -85,7 +92,11 @@ public partial class Player3D : CharacterBody3D
 
 		hud = GetNode<HUD>("HUD");
 		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterSheet.Name;
+
+		inventoryPanel = hud.GetNode<PanelContainer>("Inventory");
+		itemList = hud.GetNode<ItemList>("Inventory/ItemList");
 		castBar = hud.GetNode<ProgressBar>("CastBar");
+		spellBar = hud.GetNode<ItemList>("SpellBar/SpellList");
 
         healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
 		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/ManaBar");
@@ -102,17 +113,21 @@ public partial class Player3D : CharacterBody3D
 
 		cameraBoom.SpringLength = zoomStart;
 
-		currentHp = characterSheet.CurrentHealth.Value;
-		currentMana = characterSheet.CurrentMana.Value;
-		healthBar.Value = currentHp;
-		manaBar.Value = currentMana;
+		currentHp = characterSheet.CurrentHealth;
+		currentMana = characterSheet.CurrentMana;
+		UpdateUnitFrame();
 
-		charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
+        charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
 
         PutOnEquipment(world.equippables.First(e => e.Name == "Hat"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Jacket"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Knife"));
         ReadyCharacterSheetPanel();
+		ReadyInventory();
+
+		spellList.Add(new Spell());
+
+		ReadySpells();
 
         attackerList = new();
     }
@@ -128,17 +143,39 @@ public partial class Player3D : CharacterBody3D
 	private void ReadyCharacterSheetPanel()
 	{
 		charSheetPanel.GetNode<Label>("CSHContainer/Name").Text = characterSheet.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text += characterSheet.Equipment.Head.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text += characterSheet.Equipment.Body.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Armor").Text += characterSheet.Armor.Value;
-		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text += characterSheet.Equipment.Melee.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text += characterSheet.WeaponDamage.Value;
+		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text = $"Head: {characterSheet.Equipment.Head.Name}";
+		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text = $"Body: {characterSheet.Equipment.Body.Name}";
+		charSheetPanel.GetNode<Label>("CSHContainer/Armor").Text = $"Armor: {characterSheet.Armor.Value}";
+		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text = $"Weapon: {characterSheet.Equipment.Melee.Name}";
+		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text = $"Damage: {characterSheet.WeaponDamage.Value}";
 		charSheetPanel.GetNode<TextureButton>("EquipmentL/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
-		charSheetPanel.GetNode<TextureButton>("EquipmentL/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
+        charSheetPanel.GetNode<TextureButton>("EquipmentL/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
 		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/MainHand").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
 	}
 
-	private void PutOnEquipment(Equippable equipment)
+	private void ReadyInventory()
+	{
+		var sword = world.equippables.First(e => e.Name == "Sword");
+
+        inventory.Items.Add(sword);
+        itemList.AddItem(sword.Name, GD.Load<Texture2D>(sword.Icon));
+
+        foreach (var item in world.consumables)
+		{
+			itemList.AddItem(item.Name, GD.Load<Texture2D>(item.Icon));
+			inventory.Items.Add(item);
+		}
+	}
+
+	private void ReadySpells()
+	{
+		foreach (var spell in spellList)
+		{
+			spellBar.AddItem("", GD.Load<Texture2D>(spell.Icon));
+		}
+	}
+
+	public void PutOnEquipment(Equippable equipment)
 	{
 		foreach (var property in characterSheet.Equipment.GetType().GetProperties())
 		{
@@ -148,31 +185,37 @@ public partial class Player3D : CharacterBody3D
 				Equippable oldEquipped = (Equippable)characterSheet.Equipment.GetType().GetProperty(property.Name).GetValue(characterSheet.Equipment);
 				RemoveEquipment(oldEquipped);
                 property.SetValue(characterSheet.Equipment, equipment);
-				AddNewEquipmentStat(equipment.MainStat);
+				AddStatModifierToPlayer(equipment.MainStat);
 				foreach(var statModifier in equipment.StatModifiers)
 				{
 					if (statModifier != null)
 					{
-                        AddNewEquipmentStat(statModifier);
+                        AddStatModifierToPlayer(statModifier);
                     }
 				}
 			}
 		}
 	}
 
-	private void RemoveEquipment(Equippable equipment)
+	public void RemoveEquipment(Equippable equipment)
 	{
-		RemoveOldEquipmentStat(equipment.MainStat);
+		RemoveStatModifierFromPlayer(equipment.MainStat);
 		foreach(var statModifier in equipment.StatModifiers)
 		{
             if (statModifier != null)
             {
-                RemoveOldEquipmentStat(statModifier);
+                RemoveStatModifierFromPlayer(statModifier);
             }
         }
-	}
+		if (equipment.Name != "None")
+		{
+			inventory.Items.Add(equipment);
+			itemList.AddItem(equipment.Name, GD.Load<Texture2D>(equipment.Icon));
+        }
+        ReadyCharacterSheetPanel();
+    }
 
-    private void RemoveOldEquipmentStat(StatModifier statModifier)
+    private void RemoveStatModifierFromPlayer(StatModifier statModifier)
 	{
 		foreach (var property in characterSheet.GetType().GetProperties())
 		{
@@ -184,17 +227,57 @@ public partial class Player3D : CharacterBody3D
 		}
 	}
 	
-	private void AddNewEquipmentStat(StatModifier statModifier)
+	private void AddStatModifierToPlayer(StatModifier statModifier)
 	{
-		foreach (var property in characterSheet.GetType().GetProperties())
+		if (statModifier.StatType == StatTypes.CurrentHealth)
 		{
-			if (property.Name == statModifier.StatType.ToString())
-			{
-				Stat stat = (Stat)characterSheet.GetType().GetProperty(property.Name).GetValue(characterSheet);
-				stat.AddModifier(statModifier);
-			}
+			characterSheet.CurrentHealth += statModifier.Value;
 		}
-	}
+		else
+		{
+            foreach (var property in characterSheet.GetType().GetProperties())
+            {
+                if (property.Name == statModifier.StatType.ToString())
+                {
+                    Stat stat = (Stat)characterSheet.GetType().GetProperty(property.Name).GetValue(characterSheet);
+                    stat.AddModifier(statModifier);
+                }
+            }
+        }
+        ReadyCharacterSheetPanel();
+    }
+
+	public void UseConsumable(Consumable item)
+	{
+        AddStatModifierToPlayer(item.MainStat);
+        foreach (var statModifier in item.StatModifiers)
+        {
+            if (statModifier != null)
+            {
+                AddStatModifierToPlayer(statModifier);
+            }
+        }
+    }
+
+	private void UpdateUnitFrame()
+	{
+        healthBar.Value = currentHp;
+        manaBar.Value = currentMana;
+    }
+
+	private void UpdateStats()
+	{
+		currentHp = characterSheet.CurrentHealth;
+		if (currentHp > characterSheet.MaxHealth.Value)
+		{
+			currentHp = characterSheet.MaxHealth.Value;
+		}
+		currentMana = characterSheet.CurrentMana;
+        if (currentMana > characterSheet.MaxMana.Value)
+        {
+            currentMana = characterSheet.MaxMana.Value;
+        }
+    }
 
 	public override void _Input(InputEvent @event)
 	{
@@ -243,11 +326,9 @@ public partial class Player3D : CharacterBody3D
 				GD.Print(cameraBoom.SpringLength);
 			}
 		}
+
 		if (Input.IsActionJustPressed("character_sheet"))
 		{
-			GD.Print(characterSheet.Equipment.Head.Name);
-			GD.Print(characterSheet.Equipment.Body.Name);
-			GD.Print(characterSheet.Equipment.Melee.Name);
 			if (!charSheetPanel.Visible)
 			{
                 charSheetPanel.Visible = true;
@@ -258,9 +339,21 @@ public partial class Player3D : CharacterBody3D
 			}
         }
 
+		if (Input.IsActionJustPressed("inventory"))
+		{
+            if (!inventoryPanel.Visible)
+            {
+                inventoryPanel.Visible = true;
+            }
+            else
+            {
+                inventoryPanel.Visible = false;
+            }
+        }
+
         if (Input.IsActionJustPressed("action_bar_1"))
         {
-			CastSpell(new Spell());
+			CastSpell(spellList[0]);
         }
 
         if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
@@ -286,6 +379,8 @@ public partial class Player3D : CharacterBody3D
     public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+		UpdateUnitFrame();
+		UpdateStats();
 
         if (attackChambered && withinRange && target != null)
         {
@@ -429,7 +524,7 @@ public partial class Player3D : CharacterBody3D
 
     public void TakeDamage(float damageAmount)
     {
-        currentHp -= damageAmount;
+        characterSheet.CurrentHealth -= damageAmount;
 		healthBar.Value = currentHp;
         GD.Print($"Health is = {currentHp}");
         if (currentHp <= 0)

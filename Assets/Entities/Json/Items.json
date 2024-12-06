@@ -28,5 +28,15 @@
 		"value": 6.0,
 		"statType": 3
 	}
+  },
+  {
+	"name": "Sword",
+	"description": "Slashing device",
+	"equipmentType": 2,
+	"icon": "res://Assets/UI/Icons/sword-icon.png",
+	"mainStat": {
+		"value": 10.0,
+		"statType": 3
+	}
   }
 ]

@@ -8,6 +8,8 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Meta
 {
     public partial class Consumable : Item
     {
-        public float Value { get; set; }
+        public StatModifier MainStat {  get; set; }
+        public List<StatModifier> StatModifiers { get; set; } = new List<StatModifier>();
+        public string Icon { get; set; } = "res://Assets/UI/Icons/missing-icon.png";
     }
 }

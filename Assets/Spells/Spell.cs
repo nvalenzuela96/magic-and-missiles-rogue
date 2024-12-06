@@ -16,6 +16,7 @@ public partial class Spell : CharacterBody3D
     public float Damage { get; set; } = 20f;
     [Export]
     public bool AttackSpell { get; set; } = true;
+    public string Icon { get; set; } = "res://Assets/UI/Icons/fire-spell-icon.png";
 
     public Mob target;
     public Player3D caster;

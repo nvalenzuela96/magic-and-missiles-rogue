@@ -1,0 +1,11 @@
+[
+  {
+	"name": "Soda",
+	"description": "Heal 10 points",
+	"icon": "res://Assets/UI/Icons/soda-icon.png",
+	"mainStat": {
+		"value": 10,
+		"statType": 5
+	}
+  }
+]

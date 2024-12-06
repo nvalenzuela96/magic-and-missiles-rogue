@@ -12,6 +12,7 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Meta
         Constitution,
         Intelligence,
         WeaponDamage,
-        Armor
+        Armor,
+        CurrentHealth
     }
 }
