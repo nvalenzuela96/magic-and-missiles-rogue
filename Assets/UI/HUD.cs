@@ -12,7 +12,7 @@ public partial class HUD : Control
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		itemList = GetNode<ItemList>("Inventory/ItemList");
+		itemList = GetNode<ItemList>("InventoryPanel/ItemList");
 		player = GetParent<Player3D>();
 	}
 

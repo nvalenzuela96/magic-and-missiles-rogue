@@ -53,11 +53,11 @@ public partial class Player3D : CharacterBody3D
 	private ProgressBar targetHealthBar;
 	private ProgressBar targetManaBar;
 
-	private PanelContainer inventoryPanel;
+	private Panel inventoryPanel;
 	private ItemList itemList;
 	public Inventory inventory = new();
 
-	private PanelContainer charSheetPanel;
+	private Panel charSheetPanel;
 
     public Mob target;
 	List<Mob> attackerList;
@@ -93,8 +93,8 @@ public partial class Player3D : CharacterBody3D
 		hud = GetNode<HUD>("HUD");
 		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterSheet.Name;
 
-		inventoryPanel = hud.GetNode<PanelContainer>("Inventory");
-		itemList = hud.GetNode<ItemList>("Inventory/ItemList");
+		inventoryPanel = hud.GetNode<Panel>("InventoryPanel");
+		itemList = hud.GetNode<ItemList>("InventoryPanel/ItemList");
 		castBar = hud.GetNode<ProgressBar>("CastBar");
 		spellBar = hud.GetNode<ItemList>("SpellBar/SpellList");
 
@@ -111,13 +111,13 @@ public partial class Player3D : CharacterBody3D
 		attackTimer = GetNode<Timer>("AttackTimer");
 		castTimer = GetNode<Timer>("CastTimer");
 
-		cameraBoom.SpringLength = zoomStart;
+        cameraBoom.SpringLength = zoomStart;
 
 		currentHp = characterSheet.CurrentHealth;
 		currentMana = characterSheet.CurrentMana;
 		UpdateUnitFrame();
 
-        charSheetPanel = hud.GetNode<PanelContainer>("CharacterSheet");
+        charSheetPanel = hud.GetNode<Panel>("CharacterPanel");
 
         PutOnEquipment(world.equippables.First(e => e.Name == "Hat"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Jacket"));
@@ -142,15 +142,12 @@ public partial class Player3D : CharacterBody3D
 
 	private void ReadyCharacterSheetPanel()
 	{
-		charSheetPanel.GetNode<Label>("CSHContainer/Name").Text = characterSheet.Name;
-		charSheetPanel.GetNode<Label>("CSHContainer/Head").Text = $"Head: {characterSheet.Equipment.Head.Name}";
-		charSheetPanel.GetNode<Label>("CSHContainer/Body").Text = $"Body: {characterSheet.Equipment.Body.Name}";
-		charSheetPanel.GetNode<Label>("CSHContainer/Armor").Text = $"Armor: {characterSheet.Armor.Value}";
-		charSheetPanel.GetNode<Label>("CSHContainer/Melee").Text = $"Weapon: {characterSheet.Equipment.Melee.Name}";
-		charSheetPanel.GetNode<Label>("CSHContainer/MeleeDamage").Text = $"Damage: {characterSheet.WeaponDamage.Value}";
+		charSheetPanel.GetNode<Label>("Stats/MaxHealthValue").Text = $"{characterSheet.MaxHealth.Value}";
+		charSheetPanel.GetNode<Label>("Stats/ArmorValue").Text = $"{characterSheet.Armor.Value}";
+		charSheetPanel.GetNode<Label>("Stats/MeleeDamageValue").Text = $"{characterSheet.WeaponDamage.Value}";
 		charSheetPanel.GetNode<TextureButton>("EquipmentL/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
         charSheetPanel.GetNode<TextureButton>("EquipmentL/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
-		charSheetPanel.GetNode<TextureButton>("EquipmentContainer/MainHand").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
+		charSheetPanel.GetNode<TextureButton>("Weapons/MainHand").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
 	}
 
 	private void ReadyInventory()
