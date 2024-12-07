@@ -37,6 +37,7 @@ public partial class Player3D : CharacterBody3D
 	private Node3D cameraPivot;
 
 	private Vector3 cameraRotation;
+	private Vector3 defaultCameraRotation;
 
 	private Camera3D pov;
 
@@ -83,6 +84,7 @@ public partial class Player3D : CharacterBody3D
 		cameraPivot = GetNode<Node3D>("CameraPivot");
 		cameraBoom = GetNode<SpringArm3D>("CameraPivot/CameraBoom");
 		camera = GetNode<Camera3D>("CameraPivot/CameraBoom/Camera");
+		defaultCameraRotation = cameraPivot.RotationDegrees;
 
         ReadyCharacterSheet();
 
@@ -352,26 +354,30 @@ public partial class Player3D : CharacterBody3D
         {
 			CastSpell(spellList[0]);
         }
+	}
 
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        base._UnhandledInput(@event);
         if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
-		{
+        {
             var from = camera.ProjectRayOrigin(mouseButton.Position);
             var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
-			var space = GetWorld3D().DirectSpaceState;
-			var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
-			rayCast.From = from;
-			rayCast.To = to;
+            var space = GetWorld3D().DirectSpaceState;
+            var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
+            rayCast.From = from;
+            rayCast.To = to;
             var result = space.IntersectRay(rayCast);
-			if (result.Count > 0)
-			{
-				HandleTargetting(result);
+            if (result.Count > 0)
+            {
+                HandleTargetting(result);
             }
-			else
-			{
-				target = null;
-			}
-		}
-	}
+            else
+            {
+                target = null;
+            }
+        }
+    }
 
     public override void _PhysicsProcess(double delta)
 	{
@@ -464,9 +470,10 @@ public partial class Player3D : CharacterBody3D
 
 		if (inputDir != Vector2.Zero)
 		{
-            if (!Input.IsActionPressed("camera_pan"))
+            if (!(Input.IsActionPressed("camera_pan") || Input.IsActionPressed("mouse_steer")))
             {
-                cameraPivot.RotationDegrees = cameraRotation;
+				Vector3 playerFacing = new Vector3(cameraPivot.RotationDegrees.X, defaultCameraRotation.Y, defaultCameraRotation.Z);
+                cameraPivot.RotationDegrees = playerFacing;
             }
         }
 

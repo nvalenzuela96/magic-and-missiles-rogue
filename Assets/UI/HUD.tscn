@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=8 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
 [ext_resource type="Theme" uid="uid://d0jyr5rjnbboj" path="res://Assets/UI/Styles/UITheme.tres" id="2_52shf"]
 [ext_resource type="Texture2D" uid="uid://beagym445a2ik" path="res://Assets/UI/Icons/placeholder-icon.png" id="2_j4exc"]
 [ext_resource type="Script" path="res://Assets/UI/LootPanel.cs" id="3_gs8ht"]
-[ext_resource type="Texture2D" uid="uid://dkgg3dwx8akt8" path="res://Assets/UI/Icons/fire-spell-icon.png" id="3_hwi22"]
 [ext_resource type="Texture2D" uid="uid://dmy1e3y14gksy" path="res://Assets/UI/Icons/missing-icon.png" id="4_4a3i7"]
 [ext_resource type="Script" path="res://Assets/UI/CharacterPanel.cs" id="4_fcnw3"]
 [ext_resource type="Script" path="res://Assets/UI/InventoryPanel.cs" id="4_jtfwg"]
@@ -17,6 +16,7 @@ offset_right = -853.76
 offset_bottom = -480.24
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("2_52shf")
 script = ExtResource("1_j5rrb")
 
@@ -118,11 +118,10 @@ theme = ExtResource("2_52shf")
 
 [node name="SpellList" type="ItemList" parent="SpellBar"]
 layout_mode = 2
-item_count = 1
 max_columns = 12
-item_0/icon = ExtResource("3_hwi22")
 
 [node name="InventoryPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.791
@@ -135,7 +134,6 @@ offset_right = -0.240112
 offset_bottom = -0.223999
 grow_horizontal = 0
 grow_vertical = 0
-mouse_filter = 2
 theme = ExtResource("2_52shf")
 script = ExtResource("4_jtfwg")
 
@@ -165,6 +163,7 @@ theme_type_variation = &"CloseButton"
 text = "X"
 
 [node name="LootPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.47
