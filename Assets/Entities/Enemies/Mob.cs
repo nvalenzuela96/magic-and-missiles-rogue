@@ -1,4 +1,7 @@
 using Godot;
+using MagicandMissilesRogue.Assets.Entities.Scripts.Meta;
+using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 
 public partial class Mob : CharacterBody3D
@@ -20,6 +23,7 @@ public partial class Mob : CharacterBody3D
     public float currentMana;
 
     List<Player3D> attackerList;
+    public ArrayList dropTable = new();
 
     Area3D aggroRange;
     Timer timer;
@@ -30,6 +34,8 @@ public partial class Mob : CharacterBody3D
     bool attackChambered = false;
 
     bool alive = true;
+
+    public bool lootable = false;
 
     public string name = "Lola's Enemy";
 
@@ -42,6 +48,7 @@ public partial class Mob : CharacterBody3D
         currentHp = maxHealthPoints;
         currentMana = maxManaPoints;
         attackerList = new List<Player3D>();
+        LoadDropTable();
     }
 
     public override void _Process(double delta)
@@ -69,6 +76,18 @@ public partial class Mob : CharacterBody3D
         else
         {
             RotationDegrees = new Vector3(90f, 0f, 0f);
+        }
+    }
+
+    public void LoadDropTable()
+    {
+        var fileName = "res://Assets/Entities/Json/Consumables.json";
+        var jsonString = FileAccess.GetFileAsString(fileName);
+        var items = JsonConvert.DeserializeObject<List<Consumable>>(jsonString);
+        foreach (var item in items)
+        {
+            GD.Print(item.Name);
+            dropTable.Add(item);
         }
     }
 
@@ -135,6 +154,7 @@ public partial class Mob : CharacterBody3D
                 GD.Print($"Attacker target{attacker.target}");
             }
             alive = false;
+            lootable = true;
         }
         if (!aggroed)
         {

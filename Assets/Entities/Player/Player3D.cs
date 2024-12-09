@@ -3,6 +3,7 @@ using MagicandMissilesRogue.Assets.Entities.Scripts.Characters;
 using MagicandMissilesRogue.Assets.Entities.Scripts.Meta;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -55,8 +56,12 @@ public partial class Player3D : CharacterBody3D
 	private ProgressBar targetManaBar;
 
 	private Panel inventoryPanel;
-	private ItemList itemList;
+	public ItemList itemList;
 	public Inventory inventory = new();
+
+	private Panel lootPanel;
+	public ItemList lootList;
+	public ArrayList lootingList = new();
 
 	private Panel charSheetPanel;
 
@@ -99,6 +104,9 @@ public partial class Player3D : CharacterBody3D
 		itemList = hud.GetNode<ItemList>("InventoryPanel/ItemList");
 		castBar = hud.GetNode<ProgressBar>("CastBar");
 		spellBar = hud.GetNode<ItemList>("SpellBar/SpellList");
+
+		lootPanel = hud.GetNode<Panel>("LootPanel");
+		lootList = hud.GetNode<ItemList>("LootPanel/LootList");
 
         healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
 		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/ManaBar");
@@ -258,6 +266,33 @@ public partial class Player3D : CharacterBody3D
         }
     }
 
+	private void Loot(Godot.Collections.Dictionary result)
+	{
+        var collision = result.GetValueOrDefault("collider");
+		if (collision.Obj.GetType() == typeof(Mob))
+		{
+            var lootTarget = (Mob)collision.Obj;
+            if (lootTarget.lootable)
+            {
+                foreach (var item in lootTarget.dropTable)
+                {
+                    if (item.GetType() == typeof(Consumable))
+                    {
+                        Consumable consumable = (Consumable)item;
+						GD.Print(consumable.Name);
+                        lootList.AddItem(consumable.Name, GD.Load<Texture2D>(consumable.Icon));
+                    }
+                }
+				lootingList = lootTarget.dropTable;
+                lootPanel.Visible = true;
+            }
+			else
+			{
+				GD.Print("Target is alive!");
+			}
+        }
+    }
+
 	private void UpdateUnitFrame()
 	{
         healthBar.Value = currentHp;
@@ -359,24 +394,41 @@ public partial class Player3D : CharacterBody3D
     public override void _UnhandledInput(InputEvent @event)
     {
         base._UnhandledInput(@event);
-        if (@event is InputEventMouseButton mouseButton && Input.IsActionJustPressed("camera_pan"))
+        if (@event is InputEventMouseButton mouseButton)
         {
-            var from = camera.ProjectRayOrigin(mouseButton.Position);
-            var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
-            var space = GetWorld3D().DirectSpaceState;
-            var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
-            rayCast.From = from;
-            rayCast.To = to;
-            var result = space.IntersectRay(rayCast);
-            if (result.Count > 0)
-            {
-                HandleTargetting(result);
+            var result = Click(mouseButton);
+            if (Input.IsActionJustPressed("camera_pan"))
+			{
+                if (result.Count > 0)
+                {
+                    HandleTargetting(result);
+                }
+                else
+                {
+                    target = null;
+                }
             }
-            else
-            {
-                target = null;
-            }
+            if (Input.IsActionJustPressed("mouse_steer"))
+			{
+				if (result.Count > 0)
+				{
+					Loot(result);
+				}
+			}
         }
+    }
+
+	public Godot.Collections.Dictionary Click(InputEventMouseButton mouseButton)
+	{
+        var from = camera.ProjectRayOrigin(mouseButton.Position);
+        var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
+        var space = GetWorld3D().DirectSpaceState;
+        var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
+        rayCast.From = from;
+        rayCast.To = to;
+        var result = space.IntersectRay(rayCast);
+
+		return result;
     }
 
     public override void _PhysicsProcess(double delta)

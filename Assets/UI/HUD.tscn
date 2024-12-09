@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnhkc2d4pua13"]
+[gd_scene load_steps=7 format=3 uid="uid://dnhkc2d4pua13"]
 
 [ext_resource type="Script" path="res://Assets/UI/HUD.cs" id="1_j5rrb"]
 [ext_resource type="Theme" uid="uid://d0jyr5rjnbboj" path="res://Assets/UI/Styles/UITheme.tres" id="2_52shf"]
 [ext_resource type="Texture2D" uid="uid://beagym445a2ik" path="res://Assets/UI/Icons/placeholder-icon.png" id="2_j4exc"]
 [ext_resource type="Script" path="res://Assets/UI/LootPanel.cs" id="3_gs8ht"]
-[ext_resource type="Texture2D" uid="uid://dmy1e3y14gksy" path="res://Assets/UI/Icons/missing-icon.png" id="4_4a3i7"]
 [ext_resource type="Script" path="res://Assets/UI/CharacterPanel.cs" id="4_fcnw3"]
 [ext_resource type="Script" path="res://Assets/UI/InventoryPanel.cs" id="4_jtfwg"]
 
@@ -192,7 +191,7 @@ theme = ExtResource("2_52shf")
 theme_type_variation = &"CloseButton"
 text = "X"
 
-[node name="ItemList" type="ItemList" parent="LootPanel"]
+[node name="LootList" type="ItemList" parent="LootPanel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.072
@@ -201,9 +200,6 @@ anchor_bottom = 1.0
 offset_top = -0.0400009
 grow_horizontal = 2
 grow_vertical = 2
-item_count = 1
-item_0/text = "Item1"
-item_0/icon = ExtResource("4_4a3i7")
 
 [node name="Label" type="Label" parent="LootPanel"]
 layout_mode = 1
@@ -215,6 +211,7 @@ offset_bottom = -0.0650005
 text = "Loot"
 
 [node name="CharacterPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 11.0
 offset_top = 130.0
@@ -346,4 +343,5 @@ text = "Test"
 [connection signal="item_clicked" from="InventoryPanel/ItemList" to="." method="_OnItemListItemClicked"]
 [connection signal="pressed" from="InventoryPanel/InventoryCloseButton" to="InventoryPanel" method="_OnInventoryCloseButtonPressed"]
 [connection signal="pressed" from="LootPanel/LootCloseButton" to="LootPanel" method="_OnLootCloseButtonPressed"]
+[connection signal="item_clicked" from="LootPanel/LootList" to="." method="_OnLootListItemClicked"]
 [connection signal="pressed" from="CharacterPanel/CharacterCloseButton" to="CharacterPanel" method="_OnCharacterCloseButtonPressed"]

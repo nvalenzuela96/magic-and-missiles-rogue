@@ -45,4 +45,30 @@ public partial class HUD : Control
             }
 		}
 	}
+
+    public void _OnLootListItemClicked(int index, Vector2 atPosition, int mouseButtonIndex)
+    {
+        if (mouseButtonIndex == 2)
+        {
+			GD.Print(index);
+            var itemSelected = player.lootingList[index];
+
+            if (itemSelected.GetType() == typeof(Consumable))
+            {
+                var consumable = (Consumable)itemSelected;
+				player.inventory.Items.Add(consumable);
+				player.lootingList.Remove(itemSelected);
+				player.itemList.AddItem(consumable.Name, GD.Load<Texture2D>(consumable.Icon));
+				player.lootList.RemoveItem(index);
+            }
+            if (itemSelected.GetType() == typeof(Equippable))
+            {
+                var equippable = (Equippable)itemSelected;
+				player.inventory.Items.Add(equippable);
+				player.lootingList.Remove(itemSelected);
+                player.itemList.AddItem(equippable.Name, GD.Load<Texture2D>(equippable.Icon));
+                player.lootList.RemoveItem(index);
+            }
+        }
+    }
 }
