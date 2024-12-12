@@ -2,6 +2,7 @@ using Godot;
 using MagicandMissilesRogue.Assets.Entities.Scripts.Characters;
 using MagicandMissilesRogue.Assets.Entities.Scripts.Meta;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ public partial class Player3D : CharacterBody3D
     [Export]
     float meleeRange = 2f;
 
-    float currentHp;
-	float currentMana;
+    public float currentHp;
+	public float currentMana;
 
     private Camera3D camera;
 	private SpringArm3D cameraBoom;
@@ -47,23 +48,8 @@ public partial class Player3D : CharacterBody3D
 
 	private World world;
 	private HUD hud;
-	private ProgressBar healthBar;
-	private ProgressBar manaBar;
-	private ProgressBar castBar;
 
-	private PanelContainer targetUnitFrame;
-	private ProgressBar targetHealthBar;
-	private ProgressBar targetManaBar;
-
-	private Panel inventoryPanel;
-	public ItemList itemList;
-	public Inventory inventory = new();
-
-	private Panel lootPanel;
-	public ItemList lootList;
 	public ArrayList lootingList = new();
-
-	private Panel charSheetPanel;
 
     public Mob target;
 	List<Mob> attackerList;
@@ -73,9 +59,7 @@ public partial class Player3D : CharacterBody3D
     Timer attackTimer;
     Timer castTimer;
 
-	public List<Spell> spellList = new();
-    private ItemList spellBar;
-
+    public List<Spell> spellList = new();
     public Spell castingSpell;
 
     bool cameraPanned = false;
@@ -100,21 +84,6 @@ public partial class Player3D : CharacterBody3D
 		hud = GetNode<HUD>("HUD");
 		hud.GetNode<Label>("PlayerUnitFrame/Grid/Name").Text = characterSheet.Name;
 
-		inventoryPanel = hud.GetNode<Panel>("InventoryPanel");
-		itemList = hud.GetNode<ItemList>("InventoryPanel/ItemList");
-		castBar = hud.GetNode<ProgressBar>("CastBar");
-		spellBar = hud.GetNode<ItemList>("SpellBar/SpellList");
-
-		lootPanel = hud.GetNode<Panel>("LootPanel");
-		lootList = hud.GetNode<ItemList>("LootPanel/LootList");
-
-        healthBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/HealthBar");
-		manaBar = hud.GetNode<ProgressBar>("PlayerUnitFrame/Grid/ManaBar");
-
-        targetUnitFrame = hud.GetNode<PanelContainer>("TargetUnitFrame");
-        targetHealthBar = hud.GetNode<ProgressBar>("TargetUnitFrame/Grid/HealthBar");
-        targetManaBar = hud.GetNode<ProgressBar>("TargetUnitFrame/Grid/ManaBar");
-
         playerCollider = GetNode<CollisionShape3D>("PlayerCollider");
 		playerMesh = GetNode<MeshInstance3D>("PlayerMesh");
 
@@ -125,19 +94,14 @@ public partial class Player3D : CharacterBody3D
 
 		currentHp = characterSheet.CurrentHealth;
 		currentMana = characterSheet.CurrentMana;
-		UpdateUnitFrame();
-
-        charSheetPanel = hud.GetNode<Panel>("CharacterPanel");
 
         PutOnEquipment(world.equippables.First(e => e.Name == "Hat"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Jacket"));
         PutOnEquipment(world.equippables.First(e => e.Name == "Knife"));
-        ReadyCharacterSheetPanel();
 		ReadyInventory();
 
 		spellList.Add(new Spell());
-
-		ReadySpells();
+		hud.ReadySpells();
 
         attackerList = new();
     }
@@ -150,35 +114,17 @@ public partial class Player3D : CharacterBody3D
 		};
 	}
 
-	private void ReadyCharacterSheetPanel()
-	{
-		charSheetPanel.GetNode<Label>("Stats/MaxHealthValue").Text = $"{characterSheet.MaxHealth.Value}";
-		charSheetPanel.GetNode<Label>("Stats/ArmorValue").Text = $"{characterSheet.Armor.Value}";
-		charSheetPanel.GetNode<Label>("Stats/MeleeDamageValue").Text = $"{characterSheet.WeaponDamage.Value}";
-		charSheetPanel.GetNode<TextureButton>("EquipmentL/HeadSlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Head.Icon);
-        charSheetPanel.GetNode<TextureButton>("EquipmentL/BodySlot").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Body.Icon);
-		charSheetPanel.GetNode<TextureButton>("Weapons/MainHand").TextureNormal = GD.Load<Texture2D>(characterSheet.Equipment.Melee.Icon);
-	}
-
 	private void ReadyInventory()
 	{
 		var sword = world.equippables.First(e => e.Name == "Sword");
 
-        inventory.Items.Add(sword);
-        itemList.AddItem(sword.Name, GD.Load<Texture2D>(sword.Icon));
+        characterSheet.inventory.Items.Add(sword);
+        hud.itemList.AddItem(sword.Name, GD.Load<Texture2D>(sword.Icon));
 
         foreach (var item in world.consumables)
 		{
-			itemList.AddItem(item.Name, GD.Load<Texture2D>(item.Icon));
-			inventory.Items.Add(item);
-		}
-	}
-
-	private void ReadySpells()
-	{
-		foreach (var spell in spellList)
-		{
-			spellBar.AddItem("", GD.Load<Texture2D>(spell.Icon));
+			hud.itemList.AddItem(item.Name, GD.Load<Texture2D>(item.Icon));
+			characterSheet.inventory.Items.Add(item);
 		}
 	}
 
@@ -216,10 +162,10 @@ public partial class Player3D : CharacterBody3D
         }
 		if (equipment.Name != "None")
 		{
-			inventory.Items.Add(equipment);
-			itemList.AddItem(equipment.Name, GD.Load<Texture2D>(equipment.Icon));
+			characterSheet.inventory.Items.Add(equipment);
+			hud.itemList.AddItem(equipment.Name, GD.Load<Texture2D>(equipment.Icon));
         }
-        ReadyCharacterSheetPanel();
+        hud.ReadyCharacterSheetPanel();
     }
 
     private void RemoveStatModifierFromPlayer(StatModifier statModifier)
@@ -251,7 +197,7 @@ public partial class Player3D : CharacterBody3D
                 }
             }
         }
-        ReadyCharacterSheetPanel();
+        hud.ReadyCharacterSheetPanel();
     }
 
 	public void UseConsumable(Consumable item)
@@ -280,23 +226,17 @@ public partial class Player3D : CharacterBody3D
                     {
                         Consumable consumable = (Consumable)item;
 						GD.Print(consumable.Name);
-                        lootList.AddItem(consumable.Name, GD.Load<Texture2D>(consumable.Icon));
+                        hud.lootList.AddItem(consumable.Name, GD.Load<Texture2D>(consumable.Icon));
                     }
                 }
 				lootingList = lootTarget.dropTable;
-                lootPanel.Visible = true;
+                hud.lootPanel.Visible = true;
             }
 			else
 			{
 				GD.Print("Target is alive!");
 			}
         }
-    }
-
-	private void UpdateUnitFrame()
-	{
-        healthBar.Value = currentHp;
-        manaBar.Value = currentMana;
     }
 
 	private void UpdateStats()
@@ -360,35 +300,15 @@ public partial class Player3D : CharacterBody3D
 				GD.Print(cameraBoom.SpringLength);
 			}
 		}
-
-		if (Input.IsActionJustPressed("character_sheet"))
-		{
-			if (!charSheetPanel.Visible)
-			{
-                charSheetPanel.Visible = true;
-            }
-			else
-			{
-				charSheetPanel.Visible = false;
-			}
-        }
-
-		if (Input.IsActionJustPressed("inventory"))
-		{
-            if (!inventoryPanel.Visible)
-            {
-                inventoryPanel.Visible = true;
-            }
-            else
-            {
-                inventoryPanel.Visible = false;
-            }
-        }
-
         if (Input.IsActionJustPressed("action_bar_1"))
         {
 			CastSpell(spellList[0]);
         }
+		if (Input.IsActionJustPressed("quick_save"))
+		{
+			var file = JsonConvert.SerializeObject(characterSheet);
+			GD.Print(file);
+		}
 	}
 
     public override void _UnhandledInput(InputEvent @event)
@@ -434,7 +354,7 @@ public partial class Player3D : CharacterBody3D
     public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
-		UpdateUnitFrame();
+		hud.UpdateUnitFrame();
 		UpdateStats();
 
         if (attackChambered && withinRange && target != null)
@@ -451,15 +371,15 @@ public partial class Player3D : CharacterBody3D
         }
 		if (casting)
 		{
-			castBar.MaxValue = castingSpell.CastTime;
-			castBar.Value = castTimer.TimeLeft;
+			hud.castBar.MaxValue = castingSpell.CastTime;
+			hud.castBar.Value = castTimer.TimeLeft;
 		}
 	}
 
 	private void UpdateTargetUnitFrame()
 	{
-        targetHealthBar.Value = target.currentHp;
-        targetManaBar.Value = target.currentMana;
+        hud.targetHealthBar.Value = target.currentHp;
+        hud.targetManaBar.Value = target.currentMana;
         hud.GetNode<Label>("TargetUnitFrame/Grid/Name").Text = target.name;
     }
 
@@ -470,7 +390,7 @@ public partial class Player3D : CharacterBody3D
 			casting = true;
 			castingSpell = spell;
 			castTimer.WaitTime = spell.CastTime;
-			castBar.Visible = true;
+			hud.castBar.Visible = true;
 			castTimer.Start();
 			GD.Print($"Casting {spell.SpellName}...");
 		}
@@ -482,17 +402,17 @@ public partial class Player3D : CharacterBody3D
         if (collision.Obj.GetType() == typeof(Mob))
         {
             target = (Mob)collision.Obj;
-            targetHealthBar.MaxValue = target.maxHealthPoints;
-            targetHealthBar.Value = target.currentHp;
-            targetManaBar.MaxValue = target.maxManaPoints;
-            targetManaBar.Value = target.currentMana;
+            hud.targetHealthBar.MaxValue = target.maxHealthPoints;
+            hud.targetHealthBar.Value = target.currentHp;
+            hud.targetManaBar.MaxValue = target.maxManaPoints;
+            hud.targetManaBar.Value = target.currentMana;
             target.GetTargetted(this);
-            targetUnitFrame.Show();
+            hud.targetUnitFrame.Show();
         }
         else
         {
             target = null;
-			targetUnitFrame.Hide();
+			hud.targetUnitFrame.Hide();
         }
     }
 
@@ -575,13 +495,13 @@ public partial class Player3D : CharacterBody3D
 		world.AddChild(spellDraw);
 		spellDraw.Transform = Transform;
 		castingSpell = null;
-		castBar.Visible = false;
+		hud.castBar.Visible = false;
     }
 
     public void TakeDamage(float damageAmount)
     {
         characterSheet.CurrentHealth -= damageAmount;
-		healthBar.Value = currentHp;
+		hud.healthBar.Value = currentHp;
         GD.Print($"Health is = {currentHp}");
         if (currentHp <= 0)
         {
