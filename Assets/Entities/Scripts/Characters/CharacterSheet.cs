@@ -21,5 +21,6 @@ namespace MagicandMissilesRogue.Assets.Entities.Scripts.Characters
         public Stat Speed { get; set; } = new Stat(1f);
         public Stat WeaponDamage { get; set; } = new Stat(1f);
         public Equipment Equipment { get; set; } = new Equipment();
+        public Inventory inventory = new();
     }
 }
