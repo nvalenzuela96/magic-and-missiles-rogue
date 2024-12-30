@@ -52,6 +52,7 @@ public partial class Player3D : CharacterBody3D
 	public ArrayList lootingList = new();
 
     public Mob target;
+	public Mob spellTarget;
 	List<Mob> attackerList;
 
 	public CharacterSheet characterSheet = new();
@@ -67,6 +68,10 @@ public partial class Player3D : CharacterBody3D
     bool withinRange = false;
     bool attackChambered = false;
 	bool casting = false;
+
+	bool actionStarted = false;
+	double timer = 0;
+	double thresholdTimer = 0.2;
 
     public override void _Ready()
 	{
@@ -311,37 +316,12 @@ public partial class Player3D : CharacterBody3D
 		}
 	}
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        base._UnhandledInput(@event);
-        if (@event is InputEventMouseButton mouseButton)
-        {
-            var result = Click(mouseButton);
-            if (Input.IsActionJustPressed("camera_pan"))
-			{
-                if (result.Count > 0)
-                {
-                    HandleTargetting(result);
-                }
-                else
-                {
-                    target = null;
-                }
-            }
-            if (Input.IsActionJustPressed("mouse_steer"))
-			{
-				if (result.Count > 0)
-				{
-					Loot(result);
-				}
-			}
-        }
-    }
-
-	public Godot.Collections.Dictionary Click(InputEventMouseButton mouseButton)
+	public Godot.Collections.Dictionary Click()
 	{
-        var from = camera.ProjectRayOrigin(mouseButton.Position);
-        var to = from + camera.ProjectRayNormal(mouseButton.Position) * 1000f;
+		GD.Print("Cast Ray");
+		var mousePosition = GetViewport().GetMousePosition();
+        var from = camera.ProjectRayOrigin(mousePosition);
+        var to = from + camera.ProjectRayNormal(mousePosition) * 1000f;
         var space = GetWorld3D().DirectSpaceState;
         var rayCast = PhysicsRayQueryParameters3D.Create(to, from);
         rayCast.From = from;
@@ -374,7 +354,44 @@ public partial class Player3D : CharacterBody3D
 			hud.castBar.MaxValue = castingSpell.CastTime;
 			hud.castBar.Value = castTimer.TimeLeft;
 		}
-	}
+
+		if (Input.IsActionJustPressed("camera_pan"))
+		{
+			actionStarted = true;
+		}
+		if (Input.IsActionPressed("camera_pan") && actionStarted)
+		{
+			timer += delta;
+		}
+		if (timer >= thresholdTimer && actionStarted)
+		{ 
+			actionStarted = false;
+			timer = 0;
+		}
+		
+		if (Input.IsActionJustReleased("camera_pan"))
+		{
+			if (timer < thresholdTimer && actionStarted)
+			{
+                var result = Click();
+				var collision = result.GetValueOrDefault("collider");
+				if (collision.Obj?.GetType() == typeof(Mob))
+				{
+                    if (result.Count > 0)
+                    {
+                        HandleTargetting(collision);
+                    }
+                }
+                else
+                {
+                    target = null;
+                    hud.targetUnitFrame.Hide();
+                }
+            }
+			actionStarted = false;
+			timer = 0;
+		}
+    }
 
 	private void UpdateTargetUnitFrame()
 	{
@@ -387,6 +404,7 @@ public partial class Player3D : CharacterBody3D
 	{
 		if (target != null && !casting)
 		{
+			spellTarget = target;
 			casting = true;
 			castingSpell = spell;
 			castTimer.WaitTime = spell.CastTime;
@@ -396,24 +414,15 @@ public partial class Player3D : CharacterBody3D
 		}
 	}
 
-	private void HandleTargetting(Godot.Collections.Dictionary result)
+	private void HandleTargetting(Variant collision)
 	{
-        var collision = result.GetValueOrDefault("collider");
-        if (collision.Obj.GetType() == typeof(Mob))
-        {
-            target = (Mob)collision.Obj;
-            hud.targetHealthBar.MaxValue = target.maxHealthPoints;
-            hud.targetHealthBar.Value = target.currentHp;
-            hud.targetManaBar.MaxValue = target.maxManaPoints;
-            hud.targetManaBar.Value = target.currentMana;
-            target.GetTargetted(this);
-            hud.targetUnitFrame.Show();
-        }
-        else
-        {
-            target = null;
-			hud.targetUnitFrame.Hide();
-        }
+        target = (Mob)collision.Obj;
+        hud.targetHealthBar.MaxValue = target.maxHealthPoints;
+        hud.targetHealthBar.Value = target.currentHp;
+        hud.targetManaBar.MaxValue = target.maxManaPoints;
+        hud.targetManaBar.Value = target.currentMana;
+        target.GetTargetted(this);
+        hud.targetUnitFrame.Show();
     }
 
 	private async void HandleMovement(double delta)
@@ -490,7 +499,7 @@ public partial class Player3D : CharacterBody3D
 	{
         casting = false;
 		Spell spellDraw = (Spell)spellProjectile.Instantiate();
-		spellDraw.target = target;
+		spellDraw.target = spellTarget;
 		spellDraw.caster = this;
 		world.AddChild(spellDraw);
 		spellDraw.Transform = Transform;
